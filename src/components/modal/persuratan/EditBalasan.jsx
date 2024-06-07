@@ -14,6 +14,8 @@ const ModalEditBalasan = (props) => {
   const [letter_id, setLetterId] = useState(null);
   const [detailLetter, setDetailLetter] = useState({});
   const [status, setStatus] = useState(null);
+  const [detail, setDetail] = useState(false);
+
   const [referenceNumber, setReferenceNumber] = useState(null);
   const [note, setNote] = useState(null);
 
@@ -27,7 +29,8 @@ const ModalEditBalasan = (props) => {
         setLetterId(res.data.replyletter[0].letter_id);
       });
       GetDetailSuratMasuk(letter_id).then((res) => {
-        setStatus(res?.data?.letter?.status);
+        setDetail(res.data);
+        setStatus(detail.letter.status);
       });
     }
   }, [id]);
@@ -38,7 +41,7 @@ const ModalEditBalasan = (props) => {
     formData.append("reference_number2", referenceNumber);
     formData.append("outgoing_letter_date", letter_date);
     formData.append("note", note);
-    formData.append("status", status);
+    formData.append("status", e.target.status.value);
     if (e.target.file.files[0]) {
       formData.append("file", e.target.file.files[0]);
     }
@@ -106,7 +109,7 @@ const ModalEditBalasan = (props) => {
               htmlFor="note"
               className="text-custom text-base font-semibold"
             >
-              Perihal Surat
+              Keterangan
             </label>
             <input
               type="text"
@@ -135,6 +138,7 @@ const ModalEditBalasan = (props) => {
               <option className="font-normal" value="Pending">
                 Pending
               </option>
+
               <option className="font-normal" value="Selesai">
                 Selesai
               </option>
