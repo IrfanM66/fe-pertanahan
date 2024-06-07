@@ -7,7 +7,14 @@ import { IoIosNotifications } from "react-icons/io";
 import ModalNotification from "../components/modal/Notification";
 import UseAuth from "../hooks/UseAuth";
 import { Notification } from "../utils/FetchSuratMasuk";
-
+const hideActionSeksi = [
+  "Kasubag. TU",
+  "Seksi Penetapan Hak & Pendaftaran",
+  "Seksi Survei & Pemetaan",
+  "Seksi Penataan & Pemberdayaan",
+  "Seksi Pengadaan Tanah & Pengembangan",
+  "Seksi Pengendalian & Penanganan Sengketa"
+];
 const DashboardPage = () => {
   const auth = UseAuth();
   const [data, setData] = useState(null);
@@ -77,17 +84,25 @@ const DashboardPage = () => {
             <ModalNotification notif={notif} notifData={notifData} />
           </div>
         </div>
-        <div className="rekap grid grid-cols-2 gap-5 md:grid-cols-2 xl:grid-cols-4 xl:grid-flow-col mt-4 font-semibold text-base">
+        <div
+          className={`rekap grid ${
+            hideActionSeksi.includes(auth?.type)
+              ? "xl:grid-cols-3"
+              : "xl:grid-cols-4"
+          }  gap-5 md:grid-cols-2 xl:grid-cols-4 xl:grid-flow-col mt-4 font-semibold text-base align-item-center `}
+        >
           <CardDashboard
             title="Surat Masuk"
             count={data?.totalsurat}
             description="Total Seluruh Surat Masuk"
           />
-          <CardDashboard
-            title="Belum Ditindaklanjuti"
-            count={data?.belum_ditindaklanjuti}
-            description="Surat Belum Diproses"
-          />
+          {!hideActionSeksi.includes(auth?.type) && (
+            <CardDashboard
+              title="Belum Ditindaklanjuti"
+              count={data?.belum_ditindaklanjuti}
+              description="Surat Belum Diproses"
+            />
+          )}
           <CardDashboard
             title="Sudah Didisposisi"
             count={data?.sudah_didisposisi}
@@ -99,6 +114,7 @@ const DashboardPage = () => {
             description="Surat Sudah Selesai"
           />
         </div>
+
         <div className="rekap flex-1 mt-5 bg-white rounded-xl drop-shadow-custom p-4 pb-2 h-min">
           <Chart />
         </div>
