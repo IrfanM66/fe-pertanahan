@@ -263,6 +263,10 @@ const SuratMasukPage = () => {
     } else {
       setTambah(!tambah);
     }
+    GetSuratMasuk(page).then((res) => {
+        setSurat(res.data);
+        setLoading(true);
+      });
   };
   const checkDateExceeded = (date) => {
     const currentDate = new Date();
