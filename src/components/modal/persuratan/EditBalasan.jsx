@@ -61,6 +61,7 @@ const ModalEditBalasan = (props) => {
     formData.append("outgoing_letter_date", letter_date);
     formData.append("note", note);
     formData.append("status", e.target.status.value);
+    formData.append("status", e.target.status.value);
     if (e.target.file.files[0]) {
       formData.append("file", e.target.file.files[0]);
     }
@@ -128,7 +129,7 @@ const ModalEditBalasan = (props) => {
               htmlFor="note"
               className="text-custom text-base font-semibold"
             >
-              Keterangan
+              Keterangan Keterangan
             </label>
             <input
               type="text"
