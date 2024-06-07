@@ -12,7 +12,7 @@ import {
   GetSuratMasuk,
   GetDetailSuratMasuk,
   DeleteSuratMasuk,
-  GetSearchSuratMasuk
+  GetSearchSuratMasuk,
 } from "../../utils/FetchSuratMasuk";
 import ModalTambahBalasan from "../../components/modal/persuratan/TambahBalasan";
 import Swal from "sweetalert2";
@@ -23,7 +23,7 @@ import { BsReplyAll } from "react-icons/bs";
 import UseAuth from "../../hooks/UseAuth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
-import Skeleton from "react-loading-skeleton";
+import { Oval } from "react-loader-spinner";
 
 const hideActionKakan = ["Kepala Kantor"];
 const hideActionSeksi = [
@@ -32,7 +32,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa"
+  "Seksi Pengendalian & Penanganan Sengketa",
 ];
 
 const SuratMasukPage = () => {
@@ -53,6 +53,12 @@ const SuratMasukPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [overdueAlerts, setOverdueAlerts] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const wrapperStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "50vh",
+  };
 
   const HandlerSearch = (e) => {
     const value = e.target.value;
@@ -125,7 +131,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
       setInitialLoad(false);
     }
@@ -139,7 +145,7 @@ const SuratMasukPage = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus"
+      confirmButtonText: "Hapus",
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteSuratMasuk(id).then((res) => {
@@ -154,7 +160,7 @@ const SuratMasukPage = () => {
             return {
               ...prev,
               letter: updatedLetter,
-              file: updatedFile
+              file: updatedFile,
             };
           });
           Swal.fire({
@@ -162,7 +168,7 @@ const SuratMasukPage = () => {
             text: "Data berhasil dihapus",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         });
       }
@@ -183,7 +189,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     } else if (status == false) {
       Swal.fire({
@@ -192,7 +198,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000
+        timer: 1000,
       });
     } else {
       setModal(!modal);
@@ -208,7 +214,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     }
     if (id) {
@@ -241,7 +247,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     } else if (status == false) {
       Swal.fire({
@@ -250,7 +256,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000
+        timer: 1000,
       });
     } else {
       setTambah(!tambah);
@@ -338,7 +344,18 @@ const SuratMasukPage = () => {
                 {!loading ? (
                   <tr>
                     <td colSpan="7" className="py-4">
-                      Loading...
+                      <div style={wrapperStyle}>
+                        <Oval
+                          visible={true}
+                          height="50"
+                          width="50"
+                          color="#3B6F9E"
+                          secondaryColor="#9CA3AF"
+                          ariaLabel="oval-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      </div>
                     </td>
                   </tr>
                 ) : (

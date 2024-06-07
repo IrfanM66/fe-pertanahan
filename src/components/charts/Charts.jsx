@@ -5,15 +5,22 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid
+  CartesianGrid,
 } from "recharts";
 import { GetDashboard } from "../../utils/FetchChartDashboard";
+import { Oval } from "react-loader-spinner";
 
 const Chart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth - 440);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight - 400);
+  const wrapperStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "50vh",
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,8 +53,8 @@ const Chart = () => {
         const { label, jumlah, jumlahkeluar } = res.data.surat_per_hari;
         const transformedData = label.map((day, index) => ({
           name: day,
-          letters: parseInt(jumlah[index], 10), 
-          lettersOut: parseInt(jumlahkeluar[index], 10) 
+          letters: parseInt(jumlah[index], 10),
+          lettersOut: parseInt(jumlahkeluar[index], 10),
         }));
         setData(transformedData);
       })
@@ -81,7 +88,20 @@ const Chart = () => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>
+          <div style={wrapperStyle}>
+            <Oval
+              visible={true}
+              height="50"
+              width="50"
+              color="#3B6F9E"
+              secondaryColor="#9CA3AF"
+              ariaLabel="oval-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+          </div>
+        </p>
       ) : (
         <LineChart
           width={screenWidth}
