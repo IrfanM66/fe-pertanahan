@@ -117,19 +117,21 @@ const SuratMasukPage = () => {
     setOverdueAlerts(overdueLetters);
 
     if (initialLoad && overdueLetters.length > 0) {
-      const overdueMessages = overdueLetters.join("\n");
-      toast.error(`\n${overdueMessages} belum ditangani !`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
+      overdueLetters.forEach((overdueMessage) => {
+        toast.error(`${overdueMessage} belum ditangani !`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
       });
       setInitialLoad(false);
     }
   }, [surat]);
+
   const HandlerDeleteSurat = (id) => {
     Swal.fire({
       title: "Anda yakin ingin menghapus data ini?",
