@@ -135,7 +135,6 @@ const ModalEditBalasan = (props) => {
               <option className="font-normal" value="Pending">
                 Pending
               </option>
-
               <option className="font-normal" value="Selesai">
                 Selesai
               </option>
