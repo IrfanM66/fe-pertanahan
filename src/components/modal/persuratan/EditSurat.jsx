@@ -11,12 +11,13 @@ const ModalEditSurat = (props) => {
   const [description, setDescription] = useState(null);
   const [letter_date, setLetterDate] = useState(null);
   const [received_date, setReceivedDate] = useState(null);
+  const [letters_type, setLettersType] = useState(null);
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("reference_number", no);
-    formData.append("letters_type", event.target.letters_type.value);
+    formData.append("letters_type", letters_type);
     formData.append("letter_date", letter_date);
     formData.append("received_date", received_date);
     formData.append("from", name);
@@ -81,6 +82,7 @@ const ModalEditSurat = (props) => {
     setNo(surat?.letter?.id);
     setName(surat?.letter?.from);
     setDescription(surat?.letter?.description);
+    setLettersType(surat?.letter?.letters_type);
   }, [surat]);
 
   if (!modal || !surat) {

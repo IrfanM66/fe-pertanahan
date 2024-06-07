@@ -23,6 +23,7 @@ import { BsReplyAll } from "react-icons/bs";
 import UseAuth from "../../hooks/UseAuth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
+import Skeleton from "react-loading-skeleton";
 
 const hideActionKakan = ["Kepala Kantor"];
 const hideActionSeksi = [
@@ -38,6 +39,7 @@ const SuratMasukPage = () => {
   const auth = UseAuth();
   let [searchParams, setSearchParams] = useSearchParams();
   const idNotif = searchParams.get("id");
+  const idbalas = searchParams.get("id");
   const page = searchParams.get("page") || 1;
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -82,7 +84,7 @@ const SuratMasukPage = () => {
         setSurat(res.data);
         setLoading(true);
       });
-    }, 3000); 
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, [page]);
@@ -95,6 +97,14 @@ const SuratMasukPage = () => {
       });
     }
   }, [idNotif]);
+  useEffect(() => {
+    if (idbalas) {
+      GetDetailSuratMasuk(idbalas).then((res) => {
+        setDetail(res.data);
+        setModal3(true);
+      });
+    }
+  }, [idbalas]);
   useEffect(() => {
     const overdueLetters =
       surat.letter
@@ -325,110 +335,122 @@ const SuratMasukPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {!loading
-                  ? null
-                  : (
-                      (searchResults.length > 0
-                        ? searchResults
-                        : surat?.letter || []) || []
-                    ).map((item, index) => {
-                      const isDateExceeded = checkDateExceeded(
-                        item.letter_date
-                      );
-                      return (
-                        <tr
-                          key={index}
-                          className={`${
-                            isDateExceeded && item.status == "Pending"
-                              ? "bg-red-200"
-                              : (index + 1) % 2 === 0
-                              ? "bg-quinary"
-                              : ""
-                          }`}
-                        >
-                          <td className="py-2 text-sm">
-                            {index + 1 + (page - 1) * 10}
-                          </td>
-                          <td className="py-2 text-sm">{item.from}</td>
-                          <td className="py-2 text-sm">{item.letters_type}</td>
-                          <td className="py-2 text-sm">{item.letter_date}</td>
-                          <td className="py-2 text-sm">
-                            <p
-                              className={`${
-                                item.status !== "Pending"
-                                  ? "bg-green-200 text-green-500"
-                                  : "bg-red-300 text-red-600"
-                              } rounded-lg py-1 text-s`}
-                            >
-                              {item.status}
-                            </p>
-                          </td>
-                          <td className="py-2">
-                            <div className="aksi flex justify-center gap-2">
-                              {hideActionKakan.includes(auth?.type) ||
-                              hideActionSeksi.includes(auth?.type) ? null : (
-                                <MdModeEdit
-                                  className="text-secondary cursor-pointer text-xl"
-                                  type="button"
-                                  onClick={() =>
-                                    HandlerEditSurat({ id: item.id })
-                                  }
-                                />
-                              )}
-                              <IoMdEye
-                                className="text-yellow-300 cursor-pointer text-xl"
+                {!loading ? (
+                  <tr>
+                    <td colSpan="7" className="py-4">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                    (searchResults?.length > 0
+                      ? searchResults
+                      : surat?.letter || []) || []
+                  ).length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-4">
+                      Tidak ada surat yang masuk.
+                    </td>
+                  </tr>
+                ) : (
+                  (
+                    (searchResults.length > 0
+                      ? searchResults
+                      : surat?.letter || []) || []
+                  ).map((item, index) => {
+                    const isDateExceeded = checkDateExceeded(item.letter_date);
+                    return (
+                      <tr
+                        key={index}
+                        className={`${
+                          isDateExceeded && item.status == "Pending"
+                            ? "bg-red-200"
+                            : (index + 1) % 2 === 0
+                            ? "bg-quinary"
+                            : ""
+                        }`}
+                      >
+                        <td className="py-2 text-sm">
+                          {index + 1 + (page - 1) * 10}
+                        </td>
+                        <td className="py-2 text-sm">{item.from}</td>
+                        <td className="py-2 text-sm">{item.letters_type}</td>
+                        <td className="py-2 text-sm">{item.letter_date}</td>
+                        <td className="py-2 text-sm">
+                          <p
+                            className={`${
+                              item.status !== "Pending"
+                                ? "bg-green-200 text-green-500"
+                                : "bg-red-300 text-red-600"
+                            } rounded-lg py-1 text-s`}
+                          >
+                            {item.status}
+                          </p>
+                        </td>
+                        <td className="py-2">
+                          <div className="aksi flex justify-center gap-2">
+                            {hideActionKakan.includes(auth?.type) ||
+                            hideActionSeksi.includes(auth?.type) ? null : (
+                              <MdModeEdit
+                                className="text-secondary cursor-pointer text-xl"
                                 type="button"
-                                onClick={() => HandlerDetailSurat(item.id)}
+                                onClick={() =>
+                                  HandlerEditSurat({ id: item.id })
+                                }
                               />
-                              {hideActionKakan.includes(auth?.type) ||
-                              hideActionSeksi.includes(auth?.type) ? null : (
-                                <MdDeleteOutline
-                                  className="text-red-500 cursor-pointer text-xl"
-                                  type="button"
-                                  onClick={() => HandlerDeleteSurat(item.id)}
-                                />
-                              )}
-                              <Link
-                                to={`/surat-masuk/daftar-balasan/${item.id}`}
+                            )}
+                            <IoMdEye
+                              className="text-yellow-300 cursor-pointer text-xl"
+                              type="button"
+                              onClick={() => HandlerDetailSurat(item.id)}
+                            />
+                            {hideActionKakan.includes(auth?.type) ||
+                            hideActionSeksi.includes(auth?.type) ? null : (
+                              <MdDeleteOutline
+                                className="text-red-500 cursor-pointer text-xl"
+                                type="button"
+                                onClick={() => HandlerDeleteSurat(item.id)}
+                              />
+                            )}
+                            <Link to={`/surat-masuk/daftar-balasan/${item.id}`}>
+                              <BsReplyAll
+                                className="text-red-500 cursor-pointer text-xl"
+                                type="button"
+                              />
+                            </Link>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="w-auto flex space-x-4">
+                            {!hideActionKakan.includes(auth?.type) && (
+                              <div
+                                onClick={() =>
+                                  HandlerTambahBalasan({ id: item.id })
+                                }
+                                className="bg-secondary rounded-xl text-white flex items-center justify-center flex-grow"
                               >
-                                <BsReplyAll
-                                  className="text-red-500 cursor-pointer text-xl"
-                                  type="button"
-                                />
-                              </Link>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="w-auto flex space-x-4">
-                              {!hideActionKakan.includes(auth?.type) && (
-                                <div
-                                  onClick={() =>
-                                    HandlerTambahBalasan({ id: item.id })
-                                  }
-                                  className="bg-secondary rounded-xl text-white flex items-center justify-center flex-grow"
-                                >
+                                <button className="font-medium py-1 px-2 w-full">
+                                  Tambah Balasan
+                                </button>
+                              </div>
+                            )}
+                            {!hideActionSeksi.includes(auth?.type) && (
+                              <Link
+                                to={`/surat-masuk/disposisi-surat/${item.id}`}
+                                className="flex-grow"
+                              >
+                                <div className="bg-secondary rounded-xl text-white flex items-center justify-center w-full flex-grow">
                                   <button className="font-medium py-1 px-2 w-full">
-                                    Tambah Balasan
+                                    Disposisi Surat
                                   </button>
                                 </div>
-                              )}
-                              {!hideActionSeksi.includes(auth?.type) && (
-                                <Link
-                                  to={`/surat-masuk/disposisi-surat/${item.id}`}
-                                  className="flex-grow"
-                                >
-                                  <div className="bg-secondary rounded-xl text-white flex items-center justify-center w-full flex-grow">
-                                    <button className="font-medium py-1 px-2 w-full">
-                                      Disposisi Surat
-                                    </button>
-                                  </div>
-                                </Link>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                              </Link>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>

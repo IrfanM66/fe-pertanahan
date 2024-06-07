@@ -11,7 +11,7 @@ import {
   GetBalasanSurat,
   GetDetailBalasan,
   DeleteBalasanSurat,
-  GetSearchBalasanSurat,
+  GetSearchBalasanSurat
 } from "../../utils/FetchBalasanSurat";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -48,14 +48,14 @@ const BalasanSuratPage = () => {
     if (value) {
       GetSearchBalasanSurat(value)
         .then((res) => {
-          setSearchResults(res.data.replyletter); 
+          setSearchResults(res.data.replyletter);
         })
         .catch((error) => {
           console.error("Error fetching search results:", error);
-          setSearchResults([]); 
+          setSearchResults([]);
         });
     } else {
-      setSearchResults([]); 
+      setSearchResults([]);
     }
   };
 
@@ -75,7 +75,7 @@ const BalasanSuratPage = () => {
       confirmButtonColor: "#FB0017",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Hapus"
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteBalasanSurat(id).then((res) => {
@@ -83,9 +83,7 @@ const BalasanSuratPage = () => {
             {
               return {
                 ...prev,
-                replyletter: prev.replyletter.filter(
-                  (surat) => surat.id !== id
-                ),
+                replyletter: prev.replyletter.filter((surat) => surat.id !== id)
               };
             }
           });
@@ -94,7 +92,7 @@ const BalasanSuratPage = () => {
             text: "Data berhasil dihapus.",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1500
           });
         });
       }
@@ -120,7 +118,7 @@ const BalasanSuratPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
       GetBalasanSurat(page).then((res) => {
         setSurat(res.data);
@@ -133,7 +131,7 @@ const BalasanSuratPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setModalEdit((prev) => !prev);
@@ -195,54 +193,70 @@ const BalasanSuratPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {!loading
-                  ? null
-                  : (
-                      (searchResults?.length > 0
-                        ? searchResults
-                        : surat?.replyletter || []) || []
-                    ).map((item, index) => (
-                      <tr
-                        key={index}
-                        className={`${
-                          (index + 1) % 2 == 0 ? "bg-quinary" : null
-                        } `}
-                      >
-                        <td className="py-2.5 text-sm">
-                          {index + 1 + (page - 1) * 10}
-                        </td>
-                        <td className="py-2.5 text-sm">{item.from}</td>
-                        <td className="py-2.5 text-sm">
-                          {item.note ? item.note.substring(0, 35) : ""}
-                          {item?.note?.length > 35 ? "....." : ""}
-                        </td>
-                        <td className="py-2.5 text-sm">
-                          {item.outgoing_letter_date}
-                        </td>
-                        <td className="py-2">
-                          <div className="aksi flex justify-center gap-2">
-                            {hideActionKakan.includes(auth?.type) ? null : (
-                              <MdModeEdit
-                                className="text-secondary cursor-pointer text-xl"
-                                onClick={() =>
-                                  HandlerEditBalasan({ id: item.id })
-                                }
-                              />
-                            )}
-                            <IoMdEye
-                              className="text-yellow-300 cursor-pointer text-xl"
-                              onClick={() => HandlerDetailBalasan(item.id)}
+                {!loading ? (
+                  <tr>
+                    <td colSpan="7" className="py-4">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                    (searchResults?.length > 0
+                      ? searchResults
+                      : surat?.replyletter || []) || []
+                  ).length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-4">
+                      Tidak ada surat yang dibalas.
+                    </td>
+                  </tr>
+                ) : (
+                  (
+                    (searchResults?.length > 0
+                      ? searchResults
+                      : surat?.replyletter || []) || []
+                  ).map((item, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        (index + 1) % 2 == 0 ? "bg-quinary" : null
+                      } `}
+                    >
+                      <td className="py-2.5 text-sm">
+                        {index + 1 + (page - 1) * 10}
+                      </td>
+                      <td className="py-2.5 text-sm">{item.from}</td>
+                      <td className="py-2.5 text-sm">
+                        {item.note ? item.note.substring(0, 35) : ""}
+                        {item?.note?.length > 35 ? "....." : ""}
+                      </td>
+                      <td className="py-2.5 text-sm">
+                        {item.outgoing_letter_date}
+                      </td>
+                      <td className="py-2">
+                        <div className="aksi flex justify-center gap-2">
+                          {hideActionKakan.includes(auth?.type) ? null : (
+                            <MdModeEdit
+                              className="text-secondary cursor-pointer text-xl"
+                              onClick={() =>
+                                HandlerEditBalasan({ id: item.id })
+                              }
                             />
-                            {hideActionKakan.includes(auth?.type) ? null : (
-                              <MdDeleteOutline
-                                className="text-red-500 cursor-pointer text-xl"
-                                onClick={() => HandlerDeleteBalasan(item.id)}
-                              />
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          )}
+                          <IoMdEye
+                            className="text-yellow-300 cursor-pointer text-xl"
+                            onClick={() => HandlerDetailBalasan(item.id)}
+                          />
+                          {hideActionKakan.includes(auth?.type) ? null : (
+                            <MdDeleteOutline
+                              className="text-red-500 cursor-pointer text-xl"
+                              onClick={() => HandlerDeleteBalasan(item.id)}
+                            />
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

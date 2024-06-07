@@ -2,6 +2,8 @@ import { AiOutlineCloseSquare } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import FormatDate from "../../../utils/Date";
 import { FaFile } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 import {
   PutBalasanSurat,
   GetDetailBalasan,
@@ -14,21 +16,41 @@ const ModalEditBalasan = (props) => {
   const [letter_id, setLetterId] = useState(null);
   const [detailLetter, setDetailLetter] = useState({});
   const [status, setStatus] = useState(null);
+  const [detail, setDetail] = useState(false);
+  const [referenceletter, setReferenceLetter] = useState(null);
   const [referenceNumber, setReferenceNumber] = useState(null);
   const [note, setNote] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+
     if (id) {
-      GetDetailBalasan(id).then((res) => {
-        setDetailLetter(res.data);
-        setReferenceNumber(res.data.replyletter[0].reference_number2);
-        setNote(res.data.replyletter[0].note);
-        setLetterDate(res.data.replyletter[0].outgoing_letter_date);
-        setLetterId(res.data.replyletter[0].letter_id);
-      });
-      GetDetailSuratMasuk(letter_id).then((res) => {
-        setStatus(res?.data?.letter?.status);
-      });
+      async function fetchData() {
+        try {
+          const res = await GetDetailBalasan(id);
+          const detailData = res.data.replyletter[0];
+          setDetailLetter(res.data);
+          setReferenceNumber(detailData.reference_number2);
+          setNote(detailData.note);
+          setLetterDate(detailData.outgoing_letter_date);
+          setLetterId(detailData.letter_id);
+
+          const detailRes = await GetDetailSuratMasuk(detailData.letter_id);
+          const detailLetterData = detailRes.data;
+          setDetail(detailLetterData);
+          setStatus(detailLetterData.letter.status);
+          setReferenceLetter(
+            detailLetterData.letter.from +
+              " " +
+              detailLetterData.letter.letter_date
+          );
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching data", error);
+        }
+      }
+      fetchData();
     }
   }, [id]);
 
@@ -38,7 +60,7 @@ const ModalEditBalasan = (props) => {
     formData.append("reference_number2", referenceNumber);
     formData.append("outgoing_letter_date", letter_date);
     formData.append("note", note);
-    formData.append("status", status);
+    formData.append("status", e.target.status.value);
     if (e.target.file.files[0]) {
       formData.append("file", e.target.file.files[0]);
     }
@@ -106,7 +128,7 @@ const ModalEditBalasan = (props) => {
               htmlFor="note"
               className="text-custom text-base font-semibold"
             >
-              Perihal Surat
+              Keterangan
             </label>
             <input
               type="text"
@@ -114,7 +136,7 @@ const ModalEditBalasan = (props) => {
               placeholder="Perihal surat..."
               id="note"
               name="note"
-              value={note}
+              value={loading ? "Loading..." : note}
               onChange={(e) => setNote(e.target.value)}
             />
           </div>
@@ -158,6 +180,27 @@ const ModalEditBalasan = (props) => {
               id="file"
               name="file"
             />
+          </div>
+          <div className="lampiran grid gap-1 relative content-start">
+            <label
+              htmlFor="lampiran"
+              className="text-custom text-base font-semibold"
+            >
+              Balasan dari Surat{" "}
+            </label>
+
+            <Link to={`/surat-masuk?id=${letter_id}`} key={letter_id}>
+              <div
+                type="text"
+                className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
+              >
+                {loading ? (
+                  <p>Loading...</p>
+                ) : (
+                  <p>{referenceletter ? referenceletter : "Loading"}</p>
+                )}
+              </div>
+            </Link>
           </div>
         </div>
         <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto">
