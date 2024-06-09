@@ -6,10 +6,11 @@ import UseAuth from "../../hooks/UseAuth";
 import {
   GetRekapSurat,
   getShowFileRekap,
-  GetCategoriesRekapSurat
+  GetCategoriesRekapSurat,
 } from "../../utils/FetchRekapSurat";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
+import { CgClose } from "react-icons/cg";
 
 const RekapSuratPage = () => {
   const auth = UseAuth();
@@ -76,7 +77,7 @@ const RekapSuratPage = () => {
     setSearchParams({
       kategori: currentKategori,
       tanggal: currentTanggal,
-      page: newPage
+      page: newPage,
     });
   };
 
@@ -98,7 +99,7 @@ const RekapSuratPage = () => {
           <h2 className="font-bold text-2xl">Rekap Surat</h2>
         </div>
         <div className="rekap mt-5 bg-white h-5/6 rounded-xl drop-shadow-custom p-6 font-poppins">
-          <div className="search grid grid-flow-col grid-cols-8 gap-8">
+          <div className="search grid grid-flow-col grid-cols-8 gap-3">
             <div className="left col-start-1 col-end-7 grid grid-cols-2 gap-4">
               <div className="kategori">
                 <select
@@ -124,28 +125,23 @@ const RekapSuratPage = () => {
                   id="date"
                   name="date"
                   value={tanggal}
-                  className="font-semibold outline-none rounded-md w-full outline-2 py-2 outline-quaternary text-quaternary outline-offset-0 text-sm p-1"
+                  className="font-semibold outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-quaternary outline-offset-0 text-sm p-1"
                   onChange={HandlerTanggal}
                 />
               </div>
             </div>
-            <div className="buttons col-start-7 col-end-8 grid grid-cols-2 gap-4">
+            <div className="buttons col-start-7 col-end-9 grid grid-cols-2 gap-2">
               <div
                 className="reset-btn bg-red-500 rounded-lg text-white grid justify-center content-center cursor-pointer"
                 onClick={handleResetFilter}
               >
-                <div className="grid grid-flow-col w-10/12 gap-2 items-center ">
-                  <p>x</p>
-                </div>
+                <CgClose />
               </div>
               <div
                 className="search-btn bg-secondary rounded-lg text-white grid justify-center content-center cursor-pointer"
                 onClick={handleSearch}
               >
-                <div className="grid grid-flow-col w-10/12 gap-2 items-center ">
-                  <FaSearch size="1rem" />
-                  <p>Cari</p>
-                </div>
+                <FaSearch />
               </div>
             </div>
           </div>
