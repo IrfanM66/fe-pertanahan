@@ -11,7 +11,7 @@ import {
   GetBalasanSurat,
   GetDetailBalasan,
   DeleteBalasanSurat,
-  GetSearchBalasanSurat,
+  GetSearchBalasanSurat
 } from "../../utils/FetchBalasanSurat";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
@@ -46,7 +46,7 @@ const BalasanSuratPage = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "50vh", 
+    height: "50vh"
   };
 
   const HandlerSearch = (e) => {
@@ -57,14 +57,18 @@ const BalasanSuratPage = () => {
       GetSearchBalasanSurat(value)
         .then((res) => {
           setSearchResults(res.data.replyletter);
+          setLoading(true);
         })
         .catch((error) => {
           console.error("Error fetching search results:", error);
           setSearchResults([]);
+          setLoading(true);
         });
     } else {
       setSearchResults([]);
+      setLoading(true);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -72,6 +76,7 @@ const BalasanSuratPage = () => {
       setSurat(res.data);
       setLoading(true);
     });
+    setLoading(false);
   }, [page]);
 
   const HandlerDeleteBalasan = (id) => {
@@ -83,7 +88,7 @@ const BalasanSuratPage = () => {
       confirmButtonColor: "#FB0017",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Hapus"
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteBalasanSurat(id).then((res) => {
@@ -91,9 +96,7 @@ const BalasanSuratPage = () => {
             {
               return {
                 ...prev,
-                replyletter: prev.replyletter.filter(
-                  (surat) => surat.id !== id
-                ),
+                replyletter: prev.replyletter.filter((surat) => surat.id !== id)
               };
             }
           });
@@ -102,7 +105,7 @@ const BalasanSuratPage = () => {
             text: "Data berhasil dihapus.",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1500
           });
         });
       }
@@ -128,7 +131,7 @@ const BalasanSuratPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
 
       GetBalasanSurat(page).then((res) => {
@@ -142,7 +145,7 @@ const BalasanSuratPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setModalEdit((prev) => !prev);

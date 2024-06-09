@@ -12,7 +12,7 @@ import {
   GetSuratMasuk,
   GetDetailSuratMasuk,
   DeleteSuratMasuk,
-  GetSearchSuratMasuk,
+  GetSearchSuratMasuk
 } from "../../utils/FetchSuratMasuk";
 import ModalTambahBalasan from "../../components/modal/persuratan/TambahBalasan";
 import Swal from "sweetalert2";
@@ -32,7 +32,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const SuratMasukPage = () => {
@@ -57,17 +57,17 @@ const SuratMasukPage = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "50vh",
+    height: "50vh"
   };
 
   const HandlerSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
-
     if (value) {
       GetSearchSuratMasuk(value)
         .then((res) => {
           setSearchResults(res.data.letter);
+          setLoading(true);
         })
         .catch((error) => {
           console.error("Error fetching search results:", error);
@@ -75,7 +75,9 @@ const SuratMasukPage = () => {
         });
     } else {
       setSearchResults([]);
+      setLoading(true);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -91,7 +93,7 @@ const SuratMasukPage = () => {
         setLoading(true);
       });
     }, 3000);
-
+    setLoading(false);
     return () => clearInterval(intervalId);
   }, [page]);
 
@@ -147,7 +149,7 @@ const SuratMasukPage = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Hapus"
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteSuratMasuk(id).then((res) => {
@@ -162,7 +164,7 @@ const SuratMasukPage = () => {
             return {
               ...prev,
               letter: updatedLetter,
-              file: updatedFile,
+              file: updatedFile
             };
           });
           Swal.fire({
@@ -170,7 +172,7 @@ const SuratMasukPage = () => {
             text: "Data berhasil dihapus",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1500
           });
         });
       }
@@ -191,7 +193,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -200,7 +202,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setModal(!modal);
@@ -216,7 +218,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     }
     if (id) {
@@ -249,7 +251,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -258,15 +260,15 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setTambah(!tambah);
     }
     GetSuratMasuk(page).then((res) => {
-        setSurat(res.data);
-        setLoading(true);
-      });
+      setSurat(res.data);
+      setLoading(true);
+    });
   };
   const checkDateExceeded = (date) => {
     const currentDate = new Date();
@@ -376,7 +378,7 @@ const SuratMasukPage = () => {
                   </tr>
                 ) : (
                   (
-                    (searchResults.length > 0
+                    (searchResults?.length > 0
                       ? searchResults
                       : surat?.letter || []) || []
                   ).map((item, index) => {
