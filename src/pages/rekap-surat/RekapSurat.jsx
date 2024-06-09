@@ -6,7 +6,7 @@ import UseAuth from "../../hooks/UseAuth";
 import {
   GetRekapSurat,
   getShowFileRekap,
-  GetCategoriesRekapSurat,
+  GetCategoriesRekapSurat
 } from "../../utils/FetchRekapSurat";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
@@ -19,53 +19,77 @@ const RekapSuratPage = () => {
   const [fileUrl, setFileUrl] = useState("");
   let [searchParams, setSearchParams] = useSearchParams();
   const [initialSurat, setInitialSurat] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
 
   const page = searchParams.get("page") || 1;
+  const currentKategori = searchParams.get("kategori") || kategori;
+  const currentTanggal = searchParams.get("tanggal") || tanggal;
+
   const Handlerkategori = (e) => {
     setKategori(e.target.value);
   };
+
   const HandlerTanggal = (e) => {
     setTanggal(e.target.value);
   };
-  useEffect(() => {
-    const kategori = searchParams.get("kategori") || "";
-    const tanggal = searchParams.get("tanggal") || "";
 
-    if (kategori === "" && tanggal === "") {
+  useEffect(() => {
+    if (currentKategori === "Kategori Surat" && !currentTanggal) {
       GetRekapSurat(page).then((res) => {
         setSurat(res.data);
         setInitialSurat(res.data);
       });
     } else {
-      GetCategoriesRekapSurat(page, kategori, tanggal).then((res) => {
-        if (res.data.letter.length === 0) {
-          GetRekapSurat(page).then((res) => {
+      GetCategoriesRekapSurat(page, currentKategori, currentTanggal).then(
+        (res) => {
+          if (res.data.letter.length === 0) {
+            GetRekapSurat(page).then((res) => {
+              setSurat(res.data);
+            });
+          } else {
             setSurat(res.data);
-          });
-        } else {
-          setSurat(res.data);
+          }
         }
-      });
+      );
     }
-  }, [page, kategori, tanggal]);
+  }, [page, currentKategori, currentTanggal]);
 
   const handleViewFile = async (id, type) => {
     const url = await getShowFileRekap(id, type);
     setFileUrl(url);
     window.open(url, "_blank");
   };
+
   const handleSearch = () => {
-    GetCategoriesRekapSurat(page, kategori, tanggal).then((res) => {
+    setSearchParams({ kategori, tanggal, page: 1 });
+    GetCategoriesRekapSurat(1, kategori, tanggal).then((res) => {
       if (res.data.letter.length === 0) {
         alert("Data tidak ditemukan");
-        setShowAlert(true);
+        setSurat({});
       } else {
         setSurat(res.data);
-        setShowAlert(false);
-        setSearchParams({ kategori, tanggal });
       }
     });
   };
+
+  const handlePageChange = (newPage) => {
+    setSearchParams({
+      kategori: currentKategori,
+      tanggal: currentTanggal,
+      page: newPage
+    });
+  };
+
+  const handleResetFilter = () => {
+    setKategori("Kategori Surat");
+    setTanggal(FormatDate());
+    setSearchParams({ page: 1 });
+    GetRekapSurat(1).then((res) => {
+      setSurat(res.data);
+      setShowAlert(false);
+    });
+  };
+
   return (
     <main className="grid grid-cols-5 h-screen gap-8 bg-quinary font-poppins">
       <Sidebar />
@@ -75,11 +99,12 @@ const RekapSuratPage = () => {
         </div>
         <div className="rekap mt-5 bg-white h-5/6 rounded-xl drop-shadow-custom p-6 font-poppins">
           <div className="search grid grid-flow-col grid-cols-8 gap-8">
-            <div className="left col-start-1 col-end-8 grid grid-cols-2 gap-4">
+            <div className="left col-start-1 col-end-7 grid grid-cols-2 gap-4">
               <div className="kategori">
                 <select
                   id="month"
                   onChange={Handlerkategori}
+                  value={kategori}
                   className="font-semibold outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-quaternary outline-offset-0 text-sm p-1"
                 >
                   <option className="font-semibold" value="Kategori Surat">
@@ -104,13 +129,23 @@ const RekapSuratPage = () => {
                 />
               </div>
             </div>
-            <div
-              className="right bg-secondary rounded-lg text-white grid justify-center content-center cursor-pointer"
-              onClick={handleSearch}
-            >
-              <div className="grid grid-flow-col w-10/12 gap-2 items-center ">
-                <FaSearch size="1rem" />
-                <p>Cari</p>
+            <div className="buttons col-start-7 col-end-8 grid grid-cols-2 gap-4">
+              <div
+                className="reset-btn bg-red-500 rounded-lg text-white grid justify-center content-center cursor-pointer"
+                onClick={handleResetFilter}
+              >
+                <div className="grid grid-flow-col w-10/12 gap-2 items-center ">
+                  <p>x</p>
+                </div>
+              </div>
+              <div
+                className="search-btn bg-secondary rounded-lg text-white grid justify-center content-center cursor-pointer"
+                onClick={handleSearch}
+              >
+                <div className="grid grid-flow-col w-10/12 gap-2 items-center ">
+                  <FaSearch size="1rem" />
+                  <p>Cari</p>
+                </div>
               </div>
             </div>
           </div>
@@ -172,21 +207,17 @@ const RekapSuratPage = () => {
                         page == 1 ? "hidden" : ""
                       } h-7 w-7 text-quaternary`}
                       aria-hidden="true"
-                      onClick={() =>
-                        setSearchParams({ page: parseInt(page) - 1 })
-                      }
+                      onClick={() => handlePageChange(parseInt(page) - 1)}
                     />
                   </a>
                   <a href="#" className="relative inline-flex items-center  ">
                     <span className="sr-only">Next</span>
                     <ArrowCircleRight
                       className={`${
-                        surat?.letter?.length < 10 ? "hidden" : null
+                        surat?.letter?.length < 10 ? "hidden" : ""
                       } h-7 w-7 text-quaternary`}
                       aria-hidden="true"
-                      onClick={() =>
-                        setSearchParams({ page: parseInt(page) + 1 })
-                      }
+                      onClick={() => handlePageChange(parseInt(page) + 1)}
                     />
                   </a>
                 </nav>
