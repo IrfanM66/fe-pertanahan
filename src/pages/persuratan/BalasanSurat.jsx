@@ -19,7 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import UseAuth from "../../hooks/UseAuth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
-import { Oval } from "react-loader-spinner";
+import Spinner from "../../components/spinners/Spinner";
 
 const hideActionKakan = ["Kepala Kantor"];
 
@@ -43,12 +43,6 @@ const BalasanSuratPage = () => {
   const [loadingedit, setLoadingEdit] = useState(false);
   const [loadingeDetail, setLoadingDetail] = useState(false);
   const page = searchParams.get("page") || 1;
-  const wrapperStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "50vh"
-  };
 
   const HandlerSearch = (e) => {
     const value = e.target.value;
@@ -67,12 +61,11 @@ const BalasanSuratPage = () => {
           setLoading(true);
         });
     } else {
-      // Jika search bar kosong, ambil kembali data asli
       GetBalasanSurat(page)
         .then((res) => {
           setSurat(res.data);
           setLastPage(res.pagination.last_page);
-          setSearchResults([]); // Kosongkan hasil pencarian
+          setSearchResults([]); 
           setLoading(true);
         })
         .catch((error) => {
@@ -220,18 +213,9 @@ const BalasanSuratPage = () => {
               <tbody>
                 {!loading ? (
                   <tr>
-                    <td colSpan="7" className="py-4 justify-items-center">
-                      <div style={wrapperStyle}>
-                        <Oval
-                          visible={true}
-                          height="50"
-                          width="50"
-                          color="#3B6F9E"
-                          secondaryColor="#9CA3AF"
-                          ariaLabel="oval-loading"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                        />
+                    <td colSpan="6">
+                      <div className="flex justify-center items-center">
+                        <Spinner />
                       </div>
                     </td>
                   </tr>

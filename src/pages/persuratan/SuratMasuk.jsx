@@ -1,7 +1,7 @@
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { MdModeEdit, MdQuickreply } from "react-icons/md";
+import { MdModeEdit } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
 import { GoPlus } from "react-icons/go";
@@ -12,7 +12,7 @@ import {
   GetSuratMasuk,
   GetDetailSuratMasuk,
   DeleteSuratMasuk,
-  GetSearchSuratMasuk
+  GetSearchSuratMasuk,
 } from "../../utils/FetchSuratMasuk";
 import ModalTambahBalasan from "../../components/modal/persuratan/TambahBalasan";
 import Swal from "sweetalert2";
@@ -23,7 +23,7 @@ import { BsReplyAll } from "react-icons/bs";
 import UseAuth from "../../hooks/UseAuth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
-import { Oval } from "react-loader-spinner";
+import Spinner from "../../components/spinners/Spinner";
 
 const hideActionKakan = ["Kepala Kantor"];
 const hideActionSeksi = [
@@ -32,7 +32,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa"
+  "Seksi Pengendalian & Penanganan Sengketa",
 ];
 
 const SuratMasukPage = () => {
@@ -57,47 +57,39 @@ const SuratMasukPage = () => {
   const [loadingedit, setLoadingEdit] = useState(false);
   const [loadingeDetail, setLoadingDetail] = useState(false);
 
-  const wrapperStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "50vh"
+  const HandlerSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    if (value) {
+      GetSearchSuratMasuk(value)
+        .then((res) => {
+          setSearchResults(res.data.letter);
+          setLastPage(res.pagination.last_page);
+          setLoading(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching search results:", error);
+          setSearchResults([]);
+          setLoading(true);
+        });
+    } else {
+      GetSuratMasuk(page)
+        .then((res) => {
+          setSurat(res.data);
+          setLastPage(res.pagination.last_page);
+          setSearchResults([]);
+          setLoading(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching surat masuk:", error);
+          setSurat([]);
+          setLoading(true);
+        });
+    }
+
+    setLoading(false);
   };
-
- const HandlerSearch = (e) => {
-  const value = e.target.value;
-  setSearch(value);
-
-  if (value) {
-    GetSearchSuratMasuk(value)
-      .then((res) => {
-        setSearchResults(res.data.letter);
-        setLastPage(res.pagination.last_page);
-        setLoading(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching search results:", error);
-        setSearchResults([]);
-        setLoading(true);
-      });
-  } else {
-    // Jika search bar kosong, ambil kembali data asli
-    GetSuratMasuk(page)
-      .then((res) => {
-        setSurat(res.data);
-        setLastPage(res.pagination.last_page);
-        setSearchResults([]); // Kosongkan hasil pencarian
-        setLoading(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching surat masuk:", error);
-        setSurat([]);
-        setLoading(true);
-      });
-  }
-
-  setLoading(false);
-};
 
   useEffect(() => {
     GetSuratMasuk(page)
@@ -152,12 +144,12 @@ const SuratMasukPage = () => {
       overdueLetters.forEach((overdueMessage) => {
         toast.error(`${overdueMessage} belum ditangani !`, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       });
       setInitialLoad(false);
@@ -187,7 +179,7 @@ const SuratMasukPage = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus"
+      confirmButtonText: "Hapus",
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteSuratMasuk(id).then((res) => {
@@ -202,7 +194,7 @@ const SuratMasukPage = () => {
             return {
               ...prev,
               letter: updatedLetter,
-              file: updatedFile
+              file: updatedFile,
             };
           });
           Swal.fire({
@@ -210,7 +202,7 @@ const SuratMasukPage = () => {
             text: "Data berhasil dihapus",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         });
       }
@@ -231,7 +223,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     } else if (status == false) {
       Swal.fire({
@@ -240,7 +232,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000
+        timer: 1000,
       });
     } else {
       setModal(!modal);
@@ -257,7 +249,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     }
     if (id) {
@@ -297,7 +289,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
     } else if (status == false) {
       Swal.fire({
@@ -306,7 +298,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000
+        timer: 1000,
       });
     } else {
       setTambah(!tambah);
@@ -376,7 +368,7 @@ const SuratMasukPage = () => {
               >
                 <div className="grid grid-flow-col gap-2 text-sm items-center py-2">
                   <GoPlus size="1rem" />
-                  <button>Tambah Surat {lastpage}</button>
+                  <button>Tambah Surat</button>
                 </div>
               </div>
             )}
@@ -397,18 +389,9 @@ const SuratMasukPage = () => {
               <tbody>
                 {!loading ? (
                   <tr>
-                    <td colSpan="7" className="py-4">
-                      <div style={wrapperStyle}>
-                        <Oval
-                          visible={true}
-                          height="50"
-                          width="50"
-                          color="#3B6F9E"
-                          secondaryColor="#9CA3AF"
-                          ariaLabel="oval-loading"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                        />
+                    <td colSpan="6">
+                      <div className="flex justify-center items-center">
+                        <Spinner />
                       </div>
                     </td>
                   </tr>
@@ -440,7 +423,7 @@ const SuratMasukPage = () => {
                             : ""
                         }`}
                       >
-                        <td className="py-2 text-sm">
+                        <td className="py-2 text-sm ">
                           {index + 1 + (page - 1) * 10}
                         </td>
                         <td className="py-2 text-sm">{item.from}</td>

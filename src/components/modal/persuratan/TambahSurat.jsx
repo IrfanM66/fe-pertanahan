@@ -11,6 +11,7 @@ const ModalTambahSurat = (props) => {
   const { modal, HandlerTambahSurat, setSurat } = props;
   const [letter_date, setLetterDate] = useState(FormatDate());
   const [received_date, setReceivedDate] = useState(FormatDate());
+  const [loadingButton, setLoadingButton] = useState();
 
   if (!modal) {
     return null;
@@ -18,6 +19,7 @@ const ModalTambahSurat = (props) => {
 
   const HandlerSubmit = async (e) => {
     e.preventDefault();
+    setLoadingButton(true);
     const formData = new FormData();
     formData.append("reference_number", e.target.reference_number.value);
     formData.append("letters_type", e.target.letters_type.value);
@@ -42,6 +44,7 @@ const ModalTambahSurat = (props) => {
       status = false;
     }
     HandlerTambahSurat({ status });
+    setLoadingButton(false);
   };
 
   return (
@@ -191,7 +194,9 @@ const ModalTambahSurat = (props) => {
           </button>
           <button
             type="submit"
-            className="items-center p-3 bg-secondary rounded-lg "
+            className={`items-center p-3 bg-secondary rounded-lg cursor-pointer ${
+              loadingButton ? "opacity-50 pointer-events-none" : ""
+            }`}
           >
             Simpan
           </button>

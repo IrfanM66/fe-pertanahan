@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import ModalTambah from "../../components/modal/manajemen-user/TambahUser";
 import { MdModeEdit } from "react-icons/md";
-import { MdDeleteOutline } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
 import { GoPlus } from "react-icons/go";
 import {
@@ -155,7 +154,7 @@ const ManajemenUserPage = () => {
             <div className="left w-1/3 flex relative">
               <input
                 type="text"
-                className="outline-none rounded-lg w-full outline-2 outline-quaternary text-quaternary outline-offset-0 text-base py-1 px-2 italic"
+                className="outline-none rounded-lg w-full outline-2 outline-quaternary text-quaternary outline-offset-0 text-xs py-3 px-3 font-light italic"
                 onChange={HandlerSearch}
                 value={search}
                 placeholder="Cari user..."

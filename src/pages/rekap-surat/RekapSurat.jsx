@@ -6,7 +6,7 @@ import UseAuth from "../../hooks/UseAuth";
 import {
   GetRekapSurat,
   getShowFileRekap,
-  GetCategoriesRekapSurat
+  GetCategoriesRekapSurat,
 } from "../../utils/FetchRekapSurat";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
@@ -18,8 +18,10 @@ const RekapSuratPage = () => {
   const [tanggal, setTanggal] = useState(FormatDate());
   const [surat, setSurat] = useState({});
   const [fileUrl, setFileUrl] = useState("");
+  const [loading, setLoading] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
   const [initialSurat, setInitialSurat] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [lastpage, setLastPage] = useState([]) || ["last_page=1"];
   const page = searchParams.get("page") || 1;
@@ -82,7 +84,7 @@ const RekapSuratPage = () => {
     setSearchParams({
       kategori: currentKategori,
       tanggal: currentTanggal,
-      page: newPage
+      page: newPage,
     });
   };
 
@@ -112,17 +114,13 @@ const RekapSuratPage = () => {
                   id="month"
                   onChange={Handlerkategori}
                   value={kategori}
-                  className="font-semibold outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-quaternary outline-offset-0 text-sm p-1"
+                  className="font-medium outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-gray-700 outline-offset-0 text-sm p-1"
                 >
-                  <option className="font-semibold" value="Kategori Surat">
+                  <option value="Kategori Surat" disabled>
                     Kategori Surat
                   </option>
-                  <option className="font-semibold" value="surat masuk">
-                    surat masuk
-                  </option>
-                  <option className="font-semibold" value="surat keluar">
-                    surat keluar
-                  </option>
+                  <option value="surat masuk">Surat Masuk</option>
+                  <option value="surat keluar">Surat Keluar</option>
                 </select>
               </div>
               <div className="tanggal">
@@ -131,7 +129,7 @@ const RekapSuratPage = () => {
                   id="date"
                   name="date"
                   value={tanggal}
-                  className="font-semibold outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-quaternary outline-offset-0 text-sm p-1"
+                  className="font-medium outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-gray-700 outline-offset-0 text-sm p-1"
                   onChange={HandlerTanggal}
                 />
               </div>
@@ -141,7 +139,7 @@ const RekapSuratPage = () => {
                 className="reset-btn bg-red-500 rounded-lg text-white grid justify-center content-center cursor-pointer"
                 onClick={handleResetFilter}
               >
-                <CgClose />
+                <CgClose className="text-bold" />
               </div>
               <div
                 className="search-btn bg-secondary rounded-lg text-white grid justify-center content-center cursor-pointer"
@@ -164,28 +162,44 @@ const RekapSuratPage = () => {
                 </tr>
               </thead>
               <tbody className="text-center">
-                {surat?.letter?.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={`${(index + 1) % 2 == 0 ? "bg-quinary" : null} `}
-                  >
-                    <td className="py-2 text-sm">
-                      {index + 1 + (page - 1) * 10}
-                    </td>
-                    <td className="py-2 text-sm text-start">{item.from}</td>
-                    <td className="py-2 text-sm text-start">{item.type}</td>
-                    <td className="py-2 text-sm">{item.date}</td>
-                    <td className="py-2 text-sm">{item.description}</td>
-
-                    <td className="py-3.5 text-sm grid place-items-center">
-                      <FaFile
-                        className="text-primary cursor-pointer"
-                        type="button"
-                        onClick={() => handleViewFile(item.id, item.type)}
-                      />
+                {loading ? (
+                  <tr>
+                    <td colSpan="6">
+                      <div className="flex justify-center items-center">
+                        <Spinner />
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  (searchResults?.length > 0
+                    ? searchResults
+                    : surat?.letter || []
+                  ).map((item, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className={`${
+                          (index + 1) % 2 === 0 ? "bg-quinary" : ""
+                        }`}
+                      >
+                        <td className="py-2 text-sm">
+                          {index + 1 + (page - 1) * 10}
+                        </td>
+                        <td className="py-2 text-sm text-start">{item.from}</td>
+                        <td className="py-2 text-sm text-start">{item.type}</td>
+                        <td className="py-2 text-sm">{item.date}</td>
+                        <td className="py-2 text-sm">{item.description}</td>
+                        <td className="py-3.5 text-sm grid place-items-center">
+                          <FaFile
+                            className="text-primary cursor-pointer"
+                            type="button"
+                            onClick={() => handleViewFile(item.id, item.type)}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>

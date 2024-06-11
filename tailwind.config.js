@@ -27,6 +27,7 @@ export default {
         quaternary: "#9CA3AF",
         quinary: "#DEDEDE",
         custom: "#1E3554",
+        black: "#000",
       },
       backgroundColor: {
         primary: "#1F4162",
@@ -83,8 +84,8 @@ export default {
         1.5: "1.5px",
       },
       height: {
-        "100": "28.5rem",
-      }
+        100: "28.5rem",
+      },
     },
   },
   plugins: [],

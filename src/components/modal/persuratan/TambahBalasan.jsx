@@ -7,9 +7,11 @@ import { PostBalasanSurat } from "../../../utils/FetchBalasanSurat";
 const ModalTambahBalasan = (props) => {
   const { modal, HandlerTambahBalasan, id } = props;
   const [letter_date, setLetterDate] = useState(FormatDate());
+  const [loadingButton, setLoadingButton] = useState();
 
   const HandleTambahBalasan = async (e) => {
     e.preventDefault();
+    setLoadingButton(true);
     let formData = new FormData();
     formData.append("reference_number2", e.target.nomor.value);
     formData.append("status", e.target.status.value);
@@ -17,11 +19,13 @@ const ModalTambahBalasan = (props) => {
     formData.append("file", e.target.lampiran.files[0]);
     formData.append("note", e.target.keterangan.value);
     const response = await PostBalasanSurat(id, formData);
-    
+
     if (response.status) {
       HandlerTambahBalasan({ status: response.status });
+      setLoadingButton(false);
     } else {
       HandlerTambahBalasan({ status: response.status });
+      setLoadingButton(false);
     }
   };
 
@@ -130,14 +134,21 @@ const ModalTambahBalasan = (props) => {
           </div>
         </div>
         <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto">
-          <div className="grid grid-flow-col gap-2 items-center py-1 px-5 bg-red-500 rounded-lg">
-            <button type="button" onClick={HandlerTambahBalasan}>
-              Batal
-            </button>
-          </div>
-          <div className="grid grid-flow-col gap-2 items-center py-1 px-5 bg-secondary rounded-lg">
-            <button type="submit">Simpan</button>
-          </div>
+          <button
+            className="grid grid-flow-col gap-2 items-center py-1 px-5 bg-red-500 rounded-lg"
+            type="button"
+            onClick={HandlerTambahBalasan}
+          >
+            Batal
+          </button>
+          <button
+            className={`grid grid-flow-col gap-2 items-center py-1 px-5 bg-secondary rounded-lg ${
+              loadingButton ? "opacity-50 pointer-events-none" : ""
+            }`}
+            type="submit"
+          >
+            Simpan
+          </button>
         </div>
       </form>
     </div>
