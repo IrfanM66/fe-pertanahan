@@ -6,11 +6,12 @@ import UseAuth from "../../hooks/UseAuth";
 import {
   GetRekapSurat,
   getShowFileRekap,
-  GetCategoriesRekapSurat,
+  GetCategoriesRekapSurat
 } from "../../utils/FetchRekapSurat";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
 import { CgClose } from "react-icons/cg";
+import Spinner from "../../components/spinners/Spinner";
 
 const RekapSuratPage = () => {
   const auth = UseAuth();
@@ -18,7 +19,7 @@ const RekapSuratPage = () => {
   const [tanggal, setTanggal] = useState(FormatDate());
   const [surat, setSurat] = useState({});
   const [fileUrl, setFileUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   let [searchParams, setSearchParams] = useSearchParams();
   const [initialSurat, setInitialSurat] = useState({});
   const [searchResults, setSearchResults] = useState([]);
@@ -37,12 +38,13 @@ const RekapSuratPage = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     if (currentKategori === "Kategori Surat" && !currentTanggal) {
       GetRekapSurat(page).then((res) => {
         setSurat(res.data);
         setLastPage(res.pagination.last_page);
-
         setInitialSurat(res.data);
+        setLoading(false);
       });
     } else {
       GetCategoriesRekapSurat(page, currentKategori, currentTanggal).then(
@@ -51,10 +53,12 @@ const RekapSuratPage = () => {
             GetRekapSurat(page).then((res) => {
               setSurat(res.data);
               setLastPage(res.pagination.last_page);
+              setLoading(false);
             });
           } else {
             setSurat(res.data);
             setLastPage(res.pagination.last_page);
+            setLoading(false);
           }
         }
       );
@@ -68,27 +72,39 @@ const RekapSuratPage = () => {
   };
 
   const handleSearch = () => {
+    setLoading(true);
     setSearchParams({ kategori, tanggal, page: 1 });
     GetCategoriesRekapSurat(1, kategori, tanggal).then((res) => {
       if (res.data.letter.length === 0) {
         alert("Data tidak ditemukan");
         setSurat({});
+        setLoading(false);
       } else {
         setSurat(res.data);
         setLastPage(res.pagination.last_page);
+        setLoading(false);
       }
     });
   };
 
   const handlePageChange = (newPage) => {
+    setLoading(true);
     setSearchParams({
       kategori: currentKategori,
       tanggal: currentTanggal,
-      page: newPage,
+      page: newPage
     });
+    GetCategoriesRekapSurat(newPage, currentKategori, currentTanggal).then(
+      (res) => {
+        setSurat(res.data);
+        setLastPage(res.pagination.last_page);
+        setLoading(false);
+      }
+    );
   };
 
   const handleResetFilter = () => {
+    setLoading(true);
     setKategori("Kategori Surat");
     setTanggal(FormatDate());
     setSearchParams({ page: 1 });
@@ -96,6 +112,7 @@ const RekapSuratPage = () => {
       setSurat(res.data);
       setLastPage(res.pagination.last_page);
       setShowAlert(false);
+      setLoading(false);
     });
   };
 
@@ -128,7 +145,7 @@ const RekapSuratPage = () => {
                   type="date"
                   id="date"
                   name="date"
-                  value={tanggal}
+                  value=""
                   className="font-medium outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-gray-700 outline-offset-0 text-sm p-1"
                   onChange={HandlerTanggal}
                 />

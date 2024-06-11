@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/logo2.png";
 import { useState } from "react";
 import { GoHome } from "react-icons/go";
 import { SlEnvolopeLetter } from "react-icons/sl";
@@ -23,7 +23,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const Sidebar = ({ modal, modal2, modal3 }) => {
@@ -56,7 +56,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
     setTimeout(() => {
       navigate("/");

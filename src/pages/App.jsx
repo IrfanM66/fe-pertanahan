@@ -28,7 +28,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
       } else {
         sessionStorage.setItem("token", res.token);
@@ -39,9 +39,9 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
-        GetProfile().then(res => setAuth(res.data))
+        GetProfile().then((res) => setAuth(res.data));
         setTimeout(() => {
           navigate("/dashboard");
         }, 1000);
@@ -85,9 +85,9 @@ function App() {
           <div className="grid justify-items-center w-10/12 gap-5">
             <div className="grid justify-items-center w-11/12 gap-5">
               <img
-                src="logo.png"
+                src="logo2.png"
                 alt=""
-                className="flex justify-content-center pr-8"
+                className="flex justify-content-center w-5/6 pr-8"
               />
             </div>
           </div>
