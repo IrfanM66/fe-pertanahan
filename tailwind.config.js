@@ -4,21 +4,21 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"]
       },
       width: {
-        "97/100": "97%",
+        "97/100": "97%"
       },
       dropShadow: {
         custom: "0 0 5px rgb(210, 210, 210)",
-        "custom-login": "0 0 5px rgb(152,152,152)",
+        "custom-login": "0 0 5px rgb(152,152,152)"
       },
       colors: {
         primary: "#1F4162",
         secondary: "#3B6F9E",
         tertiary: "#F4BE42",
         quaternary: "#D8D8D8",
-        quinary: "#DEDEDE",
+        quinary: "#DEDEDE"
       },
       textColor: {
         primary: "#1F4162",
@@ -27,14 +27,16 @@ export default {
         quaternary: "#9CA3AF",
         quinary: "#DEDEDE",
         custom: "#1E3554",
-        black: "#000",
+        black: "#000"
       },
       backgroundColor: {
         primary: "#1F4162",
+        custom: "#1E3554",
         secondary: "#3B6F9E",
         tertiary: "#F4BE42",
+        pentary: "#BA6126",
         quaternary: "#DEDEDE",
-        quinary: "#E5E7EB",
+        quinary: "#E5E7EB"
       },
       outlineColor: {
         primary: "#1F4162",
@@ -42,7 +44,7 @@ export default {
         tertiary: "#F4BE42",
         quaternary: "#9CA3AF",
         quinary: "#DEDEDE",
-        custom: "#1E3554",
+        custom: "#1E3554"
       },
       inset: {
         "1/10": "10%",
@@ -65,11 +67,11 @@ export default {
         "65/100": "65%",
         "75/100": "75%",
         "85/100": "85%",
-        "95/100": "95%",
+        "95/100": "95%"
       },
       translate: {
         "1.5full": "150%",
-        "2full": "200%",
+        "2full": "200%"
       },
       borderColor: {
         primary: "#1F4162",
@@ -77,16 +79,16 @@ export default {
         tertiary: "#F4BE42",
         quaternary: "#DEDEDE",
         quinary: "#E5E7EB",
-        custom: "#1E3554",
+        custom: "#1E3554"
       },
       borderWidth: {
         1: "1px",
-        1.5: "1.5px",
+        1.5: "1.5px"
       },
       height: {
-        100: "28.5rem",
-      },
-    },
+        100: "28.5rem"
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 };

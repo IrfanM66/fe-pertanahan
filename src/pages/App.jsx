@@ -81,26 +81,29 @@ function App() {
   return (
     <div className="grid h-screen">
       <div className="grid grid-flow-col grid-cols-2 m-5 font-poppins">
-        <div className="grid justify-items-center items-center bg-secondary rounded-lg">
+        <div className="grid justify-items-center items-center ">
           <div className="grid justify-items-center w-10/12 gap-5">
             <div className="grid justify-items-center w-11/12 gap-5">
               <img
-                src="logo2.png"
+                src="logo3.png"
                 alt=""
                 className="flex justify-content-center w-5/6 pr-8"
               />
             </div>
           </div>
         </div>
-        <div className="grid items-center justify-items-center">
+        <div className="grid items-center justify-items-center bg-gradient-to-b from-secondary to-primary rounded-tr-3xl rounded-bl-3xl">
           <form
             onSubmit={handlerLogin}
             className="w-7/12 grid gap-5 px-10 py-3 rounded-md relative"
           >
-            <h2 className="text-3xl m-0 font-bold text-start text-primary">
-              Sistem Informasi Persuratan Kantah Jember
+            <h2 className="text-6xl m-0 font-bold text-start text-tertiary">
+              SIMDIS
+              <h2 className="text-3xl m-0 font-semibold text-start mt-4 text-white">
+                Sistem Informasi Manajemen Disposisi
+              </h2>
             </h2>
-            <p className="text-start m-0 font-medium text-quaternary">
+            <p className="text-start m-0 font-medium text-quinary">
               Login terlebih dahulu untuk mengakses halaman Admin
             </p>
             <div className="relative">
@@ -132,9 +135,9 @@ function App() {
             </div>
             <button
               type="submit"
-              className="bg-secondary rounded-lg w-full justify-self-center h-10 font-semibold text-white font-sans mt-3 hover:bg-primary"
+              className="bg-tertiary rounded-lg w-full justify-self-center h-10 font-bold text-white font-sans mt-3 hover:bg-pentary"
             >
-              Login
+              LOGIN
             </button>
             <ToastContainer />
             <p className="text-red-500 font-normal absolute top-full left-1/2 text-center -translate-x-1/2">
