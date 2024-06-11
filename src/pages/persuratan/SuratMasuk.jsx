@@ -64,29 +64,40 @@ const SuratMasukPage = () => {
     height: "50vh"
   };
 
-  const HandlerSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    if (value) {
-      GetSearchSuratMasuk(value)
-        .then((res) => {
-          setSearchResults(res.data.letter);
-          setLastPage(res.pagination.last_page);
-          setLoading(true);
-        })
-        .catch((error) => {
-          console.error("Error fetching search results:", error);
-          setSearchResults([]);
-        });
-      console.log("surat:", surat);
-      console.log("last page:", lastpage);
-    } else {
-      setSearchResults([]);
-      setLoading(true);
-    }
+ const HandlerSearch = (e) => {
+  const value = e.target.value;
+  setSearch(value);
 
-    setLoading(false);
-  };
+  if (value) {
+    GetSearchSuratMasuk(value)
+      .then((res) => {
+        setSearchResults(res.data.letter);
+        setLastPage(res.pagination.last_page);
+        setLoading(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching search results:", error);
+        setSearchResults([]);
+        setLoading(true);
+      });
+  } else {
+    // Jika search bar kosong, ambil kembali data asli
+    GetSuratMasuk(page)
+      .then((res) => {
+        setSurat(res.data);
+        setLastPage(res.pagination.last_page);
+        setSearchResults([]); // Kosongkan hasil pencarian
+        setLoading(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching surat masuk:", error);
+        setSurat([]);
+        setLoading(true);
+      });
+  }
+
+  setLoading(false);
+};
 
   useEffect(() => {
     GetSuratMasuk(page)
