@@ -6,7 +6,7 @@ import UseAuth from "../../hooks/UseAuth";
 import {
   GetRekapSurat,
   getShowFileRekap,
-  GetCategoriesRekapSurat,
+  GetCategoriesRekapSurat
 } from "../../utils/FetchRekapSurat";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
@@ -21,7 +21,7 @@ const RekapSuratPage = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const [initialSurat, setInitialSurat] = useState({});
   const [showAlert, setShowAlert] = useState(false);
-
+  const [lastpage, setLastPage] = useState([]) || ["last_page=1"];
   const page = searchParams.get("page") || 1;
   const currentKategori = searchParams.get("kategori") || kategori;
   const currentTanggal = searchParams.get("tanggal") || tanggal;
@@ -38,6 +38,8 @@ const RekapSuratPage = () => {
     if (currentKategori === "Kategori Surat" && !currentTanggal) {
       GetRekapSurat(page).then((res) => {
         setSurat(res.data);
+        setLastPage(res.pagination.last_page);
+
         setInitialSurat(res.data);
       });
     } else {
@@ -46,9 +48,11 @@ const RekapSuratPage = () => {
           if (res.data.letter.length === 0) {
             GetRekapSurat(page).then((res) => {
               setSurat(res.data);
+              setLastPage(res.pagination.last_page);
             });
           } else {
             setSurat(res.data);
+            setLastPage(res.pagination.last_page);
           }
         }
       );
@@ -69,6 +73,7 @@ const RekapSuratPage = () => {
         setSurat({});
       } else {
         setSurat(res.data);
+        setLastPage(res.pagination.last_page);
       }
     });
   };
@@ -77,7 +82,7 @@ const RekapSuratPage = () => {
     setSearchParams({
       kategori: currentKategori,
       tanggal: currentTanggal,
-      page: newPage,
+      page: newPage
     });
   };
 
@@ -87,6 +92,7 @@ const RekapSuratPage = () => {
     setSearchParams({ page: 1 });
     GetRekapSurat(1).then((res) => {
       setSurat(res.data);
+      setLastPage(res.pagination.last_page);
       setShowAlert(false);
     });
   };
@@ -98,7 +104,7 @@ const RekapSuratPage = () => {
         <div className="navbar pt-5">
           <h2 className="font-bold text-2xl">Rekap Surat</h2>
         </div>
-        <div className="rekap mt-5 bg-white h-5/6 rounded-xl drop-shadow-custom p-6 font-poppins">
+        <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6 font-poppins">
           <div className="search grid grid-flow-col grid-cols-8 gap-3">
             <div className="left col-start-1 col-end-7 grid grid-cols-2 gap-4">
               <div className="kategori">
@@ -210,7 +216,10 @@ const RekapSuratPage = () => {
                     <span className="sr-only">Next</span>
                     <ArrowCircleRight
                       className={`${
-                        surat?.letter?.length < 10 ? "hidden" : ""
+                        surat?.letter?.length < 10 ||
+                        surat?.letter?.length === 0
+                          ? "hidden"
+                          : ""
                       } h-7 w-7 text-quaternary`}
                       aria-hidden="true"
                       onClick={() => handlePageChange(parseInt(page) + 1)}
