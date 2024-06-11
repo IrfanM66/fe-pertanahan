@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Login } from "../utils/FetchUsers";
 import UseInput from "../hooks/UseInput.js";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { useContext } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GetProfile } from "../utils/FetchUsers";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function App() {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ function App() {
   const [password, setPassword] = UseInput("");
   const [errEmail, setErrEmail] = useState(true);
   const [errPassword, setErrPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handlerLogin = (event) => {
     event.preventDefault();
@@ -117,20 +118,27 @@ function App() {
                 onChange={setEmail}
               />
               <p className="text-red-500 text-xs absolute right-0 my-0.5">
-                {errEmail == true ? null : errEmail}
+                {errEmail === true ? null : errEmail}
               </p>
             </div>
             <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 className="form-input px-4 py-3 w-full rounded-lg border-2 border-secondary"
                 id="passwordType"
                 value={password}
                 onChange={setPassword}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-4"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
               <p className="text-red-500 text-xs absolute right-0 my-0.5">
-                {password == true ? null : errPassword}
+                {errPassword === true ? null : errPassword}
               </p>
             </div>
             <button

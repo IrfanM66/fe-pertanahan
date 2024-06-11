@@ -16,7 +16,7 @@ import Spinner from "../../components/spinners/Spinner";
 const RekapSuratPage = () => {
   const auth = UseAuth();
   const [kategori, setKategori] = useState("Kategori Surat");
-  const [tanggal, setTanggal] = useState(FormatDate());
+  const [tanggal, setTanggal] = useState("");
   const [surat, setSurat] = useState({});
   const [fileUrl, setFileUrl] = useState("");
   const [loading, setLoading] = useState(true);
@@ -106,7 +106,7 @@ const RekapSuratPage = () => {
   const handleResetFilter = () => {
     setLoading(true);
     setKategori("Kategori Surat");
-    setTanggal(FormatDate());
+    setTanggal("");
     setSearchParams({ page: 1 });
     GetRekapSurat(1).then((res) => {
       setSurat(res.data);
@@ -121,7 +121,10 @@ const RekapSuratPage = () => {
       <Sidebar />
       <div className="content col-start-2 col-end-6 w-97/100">
         <div className="navbar pt-5">
-          <h2 className="font-bold text-2xl">Rekap Surat</h2>
+          <h2 className="font-bold text-2xl">
+            Rekap Surat {page}
+            {lastpage}
+          </h2>
         </div>
         <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6 font-poppins">
           <div className="search grid grid-flow-col grid-cols-8 gap-3">
@@ -145,7 +148,7 @@ const RekapSuratPage = () => {
                   type="date"
                   id="date"
                   name="date"
-                  value=""
+                  value={tanggal}
                   className="font-medium outline-none rounded-lg w-full outline-2 py-2 pl-2 outline-quaternary text-gray-700 outline-offset-0 text-sm p-1"
                   onChange={HandlerTanggal}
                 />
@@ -248,7 +251,8 @@ const RekapSuratPage = () => {
                     <ArrowCircleRight
                       className={`${
                         surat?.letter?.length < 10 ||
-                        surat?.letter?.length === 0
+                        surat?.letter?.length === 0 ||
+                        page >= lastpage
                           ? "hidden"
                           : ""
                       } h-7 w-7 text-quaternary`}
