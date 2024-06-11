@@ -3,112 +3,143 @@ import { useEffect, useState } from "react";
 import FormatDate from "../../../utils/Date";
 import { FaFile } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import Swal from "sweetalert2";
 import {
   PutBalasanSurat,
   GetDetailBalasan,
   GetBalasanSurat
 } from "../../../utils/FetchBalasanSurat";
 import { GetDetailSuratMasuk } from "../../../utils/FetchSuratMasuk";
+
 const ModalEditBalasan = (props) => {
-  const { modal, HandlerEditBalasan, id, setSurat } = props;
-  const [letter_date, setLetterDate] = useState(FormatDate());
-  const [letter_id, setLetterId] = useState(null);
-  const [detailLetter, setDetailLetter] = useState({});
-  const [status, setStatus] = useState(null);
-  const [detail, setDetail] = useState(false);
-  const [referenceletter, setReferenceLetter] = useState(null);
-  const [referenceNumber, setReferenceNumber] = useState(null);
-  const [note, setNote] = useState(null);
+  const { modal, HandlerEditBalasan, id, surat, setSurat } = props;
+  const [referenceNumber2, setReferenceNumber2] = useState("");
+  const [outgoingLetterDate, setOutgoingLetterDate] = useState(FormatDate());
+  const [note, setNote] = useState("");
+  const [from, setFrom] = useState("");
+  const [status, setStatus] = useState("");
+  const [referenceLetter, setReferenceLetter] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nomor, setNomor] = useState("");
 
   useEffect(() => {
-    setLoading(true);
+    async function fetchData() {
+      try {
+        if (surat?.replyletter && surat.replyletter.length > 0) {
+          setLoading(true);
+          const detailRes = await GetDetailSuratMasuk(
+            surat.replyletter[0].letter_id
+          );
 
-    if (id) {
-      async function fetchData() {
-        try {
-          const res = await GetDetailBalasan(id);
-          const detailData = res.data.replyletter[0];
-          setDetailLetter(res.data);
-          setReferenceNumber(detailData.reference_number2);
-          setNote(detailData.note);
-          setLetterDate(detailData.outgoing_letter_date);
-          setLetterId(detailData.letter_id);
-
-          const detailRes = await GetDetailSuratMasuk(detailData.letter_id);
           const detailLetterData = detailRes.data;
-          setDetail(detailLetterData);
           setStatus(detailLetterData.letter.status);
           setReferenceLetter(
-            detailLetterData.letter.from +
-              " " +
-              detailLetterData.letter.letter_date
+            `${detailLetterData.letter.from} ${detailLetterData.letter.letter_date}`
           );
           setLoading(false);
-        } catch (error) {
+        } else {
           console.error("Error fetching data", error);
         }
+      } catch (error) {
+        console.error("Error fetching data", error);
+        setLoading(false);
       }
-      fetchData();
     }
-  }, [id]);
+    fetchData();
+  }, [id, surat]);
 
   const HandlerSubmit = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    formData.append("reference_number2", referenceNumber);
-    formData.append("outgoing_letter_date", letter_date);
+    const formData = new FormData();
+    formData.append("reference_number2", referenceNumber2);
+    formData.append("status", status);
+    formData.append("outgoing_letter_date", outgoingLetterDate);
     formData.append("note", note);
-    formData.append("status", e.target.status.value);
-    formData.append("status", e.target.status.value);
+    formData.append("from", from);
+
     if (e.target.file.files[0]) {
       formData.append("file", e.target.file.files[0]);
     }
-    const response = await PutBalasanSurat(id, formData);
-    if (response.status) {
-      HandlerEditBalasan({ status: response.status });
-    } else {
-      HandlerEditBalasan({ status: false });
+
+    try {
+      const response = await PutBalasanSurat(nomor, formData);
+      if (response.status === true) {
+        HandlerEditBalasan({ status: true });
+      } else {
+        Swal.fire({
+          title: "Gagal!",
+          text: "Surat gagal diedit",
+          icon: "warning",
+          iconColor: "#FB0017",
+          showConfirmButton: false,
+          timer: 1000
+        });
+      }
+    } catch (error) {
+      console.error("Error updating surat:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Terjadi kesalahan saat mengupdate surat",
+        icon: "error",
+        iconColor: "#FB0017",
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
   };
 
-  if (!modal) {
+  useEffect(() => {
+    if (surat?.replyletter?.length > 0) {
+      const replyLetter = surat.replyletter[0];
+      setOutgoingLetterDate(replyLetter.outgoing_letter_date || "");
+      setNote(replyLetter.note || "");
+      setReferenceNumber2(replyLetter.reference_number2 || "");
+      setFrom(replyLetter.from || "");
+      setStatus(replyLetter.status || "");
+      setNomor(replyLetter.id || "");
+    }
+  }, [surat]);
+
+  if (!modal || !surat) {
     return null;
   }
 
   return (
-    <div className="modal bg-white fixed border-solid font-poppins rounded-lg drop-shadow-custom z-50 inset-x-2/10 inset-y-1/10 px-8 py-10 grid">
-      <div className="header flex justify-between">
-        <h3 className="font-extrabold text-xl text-custom">Edit Balasan</h3>
+    <div className="modal fixed grid flex-col content-around bg-white rounded-lg drop-shadow-2xl z-30 inset-x-2/10 inset-y-1/10 px-8 font-poppins">
+      <div className="modal-header flex justify-between items-center my-auto">
+        <h3 className="font-extrabold text-xl text-custom">
+          Edit Surat Balasan
+        </h3>
         <AiOutlineCloseSquare
           size={"1.5rem"}
           className="text-custom cursor-pointer"
           onClick={HandlerEditBalasan}
         />
       </div>
-      <form onSubmit={HandlerSubmit} className="grid content-between">
-        <div className="modal-body grid grid-cols-2 gap-5 my-auto ">
-          <div className="tanggal grid gap-1 content-start">
+      <form onSubmit={HandlerSubmit}>
+        <div className="modal-body grid grid-cols-2 gap-5 my-auto">
+          <div className="tanggal grid gap-1">
             <label
-              htmlFor="nomor"
+              htmlFor="reference_number2"
               className="text-custom text-base font-semibold"
             >
               Nomor Surat
             </label>
+
             <input
               type="text"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
               placeholder={
-                referenceNumber ? referenceNumber : "Masukkan Nomor Surat"
+                referenceNumber2 ? referenceNumber2 : "Masukkan Nomor Surat"
               }
               id="reference_number2"
               name="reference_number2"
-              // value={referenceNumber}
-              onChange={(e) => setReferenceNumber(e.target.value)}
+              value={referenceNumber2}
+              onChange={(e) => setReferenceNumber2(e.target.value)}
             />
           </div>
-          <div className="outgoing_letter_date grid gap-1 content-start">
+
+          <div className="tanggal grid gap-1">
             <label
               htmlFor="outgoing_letter_date"
               className="text-custom text-base font-semibold"
@@ -118,31 +149,48 @@ const ModalEditBalasan = (props) => {
             <input
               type="date"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
-              value={letter_date}
+              value={outgoingLetterDate}
               id="outgoing_letter_date"
               name="outgoing_letter_date"
-              onChange={(e) => setLetterDate(e.target.value)}
+              onChange={(e) => setOutgoingLetterDate(e.target.value)}
             />
           </div>
-          <div className="note grid gap-1 content-start">
+          <div className="nama grid gap-1">
             <label
-              htmlFor="note"
+              htmlFor="from"
               className="text-custom text-base font-semibold"
             >
-              Keterangan Keterangan
+              Nama Pengirim
             </label>
             <input
               type="text"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
-              placeholder="Perihal surat..."
+              placeholder="Masukkan Nama Pengirim"
+              id="from"
+              name="from"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+            />
+          </div>
+          <div className="perihal grid gap-1">
+            <label
+              htmlFor="note"
+              className="text-custom text-base font-semibold"
+            >
+              Catatan Surat
+            </label>
+            <input
+              type="text"
+              className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
+              placeholder="Masukkan Catatan Surat"
               id="note"
               name="note"
-              value={loading ? "Loading..." : note}
+              value={note}
               onChange={(e) => setNote(e.target.value)}
             />
           </div>
 
-          <div className="status grid gap-1 content-start">
+          <div className="status grid gap-1">
             <label
               htmlFor="status"
               className="text-custom text-base font-semibold"
@@ -153,27 +201,28 @@ const ModalEditBalasan = (props) => {
               id="status"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
               name="status"
-              placeholder={status ? status : "Pilih Status Surat"}
+              required
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
             >
               <option className="font-normal" value="Pending">
                 Pending
               </option>
-
               <option className="font-normal" value="Selesai">
                 Selesai
               </option>
             </select>
           </div>
-          <div className="lampiran grid gap-1 relative content-start">
+          <div className="file grid gap-1 relative">
             <label
-              htmlFor="lampiran"
+              htmlFor="file"
               className="text-custom text-base font-semibold"
             >
               Lampiran
             </label>
             <div className="custom-input grid grid-flow-col outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg justify-between">
               <p>Pilih File</p>
-              <FaFile />
+              <FaFile className="mt-1" />
             </div>
             <input
               type="file"
@@ -186,33 +235,41 @@ const ModalEditBalasan = (props) => {
             <label
               htmlFor="lampiran"
               className="text-custom text-base font-semibold"
+              style={{ marginBottom: "0.5rem" }} // Menambahkan margin bawah
             >
-              Balasan dari Surat{" "}
+              Balasan dari Surat
             </label>
-
-            <Link to={`/surat-masuk?id=${letter_id}`} key={letter_id}>
+            <Link
+              to={`/surat-masuk?id=${surat?.replyletter[0].letter_id}`}
+              key={surat?.replyletter[0].letter_id}
+            >
               <div
                 type="text"
-                className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
+                className="outline-none border-none border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
               >
                 {loading ? (
                   <p>Loading...</p>
                 ) : (
-                  <p>{referenceletter ? referenceletter : "Loading"}</p>
+                  <p>{referenceLetter ? referenceLetter : "Loading"}</p>
                 )}
               </div>
             </Link>
           </div>
         </div>
         <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto">
-          <div className="grid grid-flow-col gap-2 items-center py-1 px-5 bg-red-500 rounded-lg">
-            <button type="button" onClick={HandlerEditBalasan}>
-              Batal
-            </button>
-          </div>
-          <div className="grid grid-flow-col gap-2 items-center py-1 px-5 bg-secondary rounded-lg">
-            <button type="submit">Simpan</button>
-          </div>
+          <button
+            type="button"
+            onClick={HandlerEditBalasan}
+            className="items-center p-3 bg-red-500 rounded-lg "
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            className="items-center p-3 bg-secondary rounded-lg "
+          >
+            Simpan
+          </button>
         </div>
       </form>
     </div>
