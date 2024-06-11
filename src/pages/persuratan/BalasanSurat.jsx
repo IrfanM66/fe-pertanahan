@@ -19,7 +19,6 @@ import "react-toastify/dist/ReactToastify.css";
 import UseAuth from "../../hooks/UseAuth";
 import { useSearchParams } from "react-router-dom";
 import { ArrowCircleLeft, ArrowCircleRight } from "iconsax-react";
-import { MoonLoader } from "react-spinners";
 import { Oval } from "react-loader-spinner";
 
 const hideActionKakan = ["Kepala Kantor"];
@@ -28,19 +27,21 @@ const BalasanSuratPage = () => {
   const auth = UseAuth();
   const [search, setSearch] = useState();
   const [searchResults, setSearchResults] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [surat, setSurat] = useState([]);
-  const [detailSurat, setDetailSurat] = useState({});
-  const [edit, setEdit] = useState({});
-  const [detail, setDetail] = useState({});
+  const [edit, setEdit] = useState([]);
+  const [detail, setDetail] = useState([]);
   const [modalDetail, setModalDetail] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalDel, setModalDel] = useState(false);
   const [modalTambah, setModalTambah] = useState(false);
   const [tambah, setTambah] = useState(false);
   const [id, setId] = useState();
+  const [lastpage, setLastPage] = useState([]) || ["last_page=1"];
+
   let [searchParams, setSearchParams] = useSearchParams();
+  const [loadingedit, setLoadingEdit] = useState(false);
+  const [loadingeDetail, setLoadingDetail] = useState(false);
   const page = searchParams.get("page") || 1;
   const wrapperStyle = {
     display: "flex",
@@ -57,6 +58,7 @@ const BalasanSuratPage = () => {
       GetSearchBalasanSurat(value)
         .then((res) => {
           setSearchResults(res.data.replyletter);
+          setLastPage(res.pagination.last_page);
           setLoading(true);
         })
         .catch((error) => {
@@ -65,15 +67,29 @@ const BalasanSuratPage = () => {
           setLoading(true);
         });
     } else {
-      setSearchResults([]);
-      setLoading(true);
+      // Jika search bar kosong, ambil kembali data asli
+      GetBalasanSurat(page)
+        .then((res) => {
+          setSurat(res.data);
+          setLastPage(res.pagination.last_page);
+          setSearchResults([]); // Kosongkan hasil pencarian
+          setLoading(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching balasan surat:", error);
+          setSurat([]);
+          setLoading(true);
+        });
     }
+
     setLoading(false);
   };
 
   useEffect(() => {
     GetBalasanSurat(page).then((res) => {
       setSurat(res.data);
+      setLastPage(res.pagination.last_page);
+
       setLoading(true);
     });
     setLoading(false);
@@ -113,18 +129,9 @@ const BalasanSuratPage = () => {
   };
 
   const HandlerEditBalasan = ({ id, status }) => {
-    console.log("Status: ", status);
-    if (id) {
-      setId(id);
-    }
-
+    setLoadingEdit(true);
     if (status) {
-      setModalEdit((prev) => !prev);
-      GetBalasanSurat(page).then((res) => {
-        setSurat(res.data);
-        setLoading(true);
-      });
-      toast.success("Surat Balasan berhasil diedit", {
+      toast.success("Surat berhasil diedit", {
         position: "bottom-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -133,30 +140,34 @@ const BalasanSuratPage = () => {
         draggable: true,
         progress: undefined
       });
-
+    }
+    if (id) {
+      GetDetailBalasan(id)
+        .then((res) => {
+          setEdit(res.data);
+          setModalEdit(!modalEdit);
+        })
+        .finally(() => setLoadingEdit(false));
+    } else {
+      setModalEdit(!modalEdit);
       GetBalasanSurat(page).then((res) => {
         setSurat(res.data);
+        setLastPage(res.pagination.last_page);
         setLoading(true);
       });
-    } else if (status == false) {
-      Swal.fire({
-        title: "Gagal",
-        text: "Lengkapi data yang kosong!",
-        icon: "warning",
-        iconColor: "#FB0017",
-        showConfirmButton: false,
-        timer: 1000
-      });
-    } else {
-      setModalEdit((prev) => !prev);
     }
+    setLoadingEdit(false);
   };
 
   const HandlerDetailBalasan = (id) => {
-    GetDetailBalasan(id).then((res) => {
-      setDetail(res.data);
-      setModalDetail((prev) => !prev);
-    });
+    setLoadingDetail(true);
+    GetDetailBalasan(id)
+      .then((res) => {
+        setDetail(res.data);
+        setModalDetail(!modalDetail);
+        console.log("detel: ", detail);
+      })
+      .finally(() => setLoadingDetail(false));
   };
 
   return (
@@ -164,7 +175,7 @@ const BalasanSuratPage = () => {
       <ModalEditBalasan
         modal={modalEdit}
         HandlerEditBalasan={HandlerEditBalasan}
-        id={id}
+        surat={edit}
         setSurat={setSurat}
       />
       <ModalDetailBalasan
@@ -261,14 +272,22 @@ const BalasanSuratPage = () => {
                         <div className="aksi flex justify-center gap-2">
                           {hideActionKakan.includes(auth?.type) ? null : (
                             <MdModeEdit
-                              className="text-secondary cursor-pointer text-xl"
+                              className={`text-secondary cursor-pointer text-xl ${
+                                loadingedit
+                                  ? "opacity-50 pointer-events-none"
+                                  : ""
+                              }`}
                               onClick={() =>
                                 HandlerEditBalasan({ id: item.id })
                               }
                             />
                           )}
                           <IoMdEye
-                            className="text-yellow-300 cursor-pointer text-xl"
+                            className={`text-yellow-300 cursor-pointer text-xl ${
+                              loadingeDetail
+                                ? "opacity-50 pointer-events-none"
+                                : ""
+                            }`}
                             onClick={() => HandlerDetailBalasan(item.id)}
                           />
                           {hideActionKakan.includes(auth?.type) ? null : (
@@ -314,9 +333,10 @@ const BalasanSuratPage = () => {
                     <span className="sr-only">Next</span>
                     <ArrowCircleRight
                       className={`${
-                        surat &&
-                        surat.replyletter &&
-                        surat.replyletter.length < 10
+                        (surat &&
+                          surat.replyletter &&
+                          surat.replyletter.length < 10) ||
+                        lastpage === 1
                           ? "hidden"
                           : null
                       } h-7 w-7 text-quaternary`}
