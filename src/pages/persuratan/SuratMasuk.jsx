@@ -41,6 +41,7 @@ const SuratMasukPage = () => {
   const idNotif = searchParams.get("id");
   const idbalas = searchParams.get("id");
   const page = searchParams.get("page") || 1;
+  const [lastpage, setLastPage] = useState([]) || ["last_page=1"];
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
@@ -53,6 +54,9 @@ const SuratMasukPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [overdueAlerts, setOverdueAlerts] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [loadingedit, setLoadingEdit] = useState(false);
+  const [loadingeDetail, setLoadingDetail] = useState(false);
+
   const wrapperStyle = {
     display: "flex",
     justifyContent: "center",
@@ -73,10 +77,13 @@ const SuratMasukPage = () => {
           console.error("Error fetching search results:", error);
           setSearchResults([]);
         });
+      console.log("surat:", surat);
+      console.log("last page:", lastpage);
     } else {
       setSearchResults([]);
       setLoading(true);
     }
+
     setLoading(false);
   };
 
@@ -84,9 +91,12 @@ const SuratMasukPage = () => {
     GetSuratMasuk(page)
       .then((res) => {
         setSurat(res.data);
+        setLastPage(res.pagination.last_page);
+
         setLoading(true);
       })
       .catch((error) => console.error("Error fetching surat masuk:", error));
+
     const intervalId = setInterval(() => {
       GetSuratMasuk(page).then((res) => {
         setSurat(res.data);
@@ -94,6 +104,8 @@ const SuratMasukPage = () => {
       });
     }, 3000);
     setLoading(false);
+    console.log("surat:", surat);
+    console.log("last page:", lastpage);
     return () => clearInterval(intervalId);
   }, [page]);
 
@@ -139,6 +151,20 @@ const SuratMasukPage = () => {
       setInitialLoad(false);
     }
   }, [surat]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if ((modal2 || modal3) && !event.target.closest(".modal")) {
+        setModal2(false);
+        setModal3(false);
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [modal2, modal3]);
 
   const HandlerDeleteSurat = (id) => {
     Swal.fire({
@@ -210,6 +236,7 @@ const SuratMasukPage = () => {
   };
 
   const HandlerEditSurat = ({ id, status }) => {
+    setLoadingEdit(true);
     if (status) {
       toast.success("Surat berhasil diedit", {
         position: "bottom-right",
@@ -222,20 +249,27 @@ const SuratMasukPage = () => {
       });
     }
     if (id) {
-      GetDetailSuratMasuk(id).then((res) => {
-        setDetail(res.data);
-        setModal2(!modal2);
-      });
+      GetDetailSuratMasuk(id)
+        .then((res) => {
+          setDetail(res.data);
+          setModal2(!modal2);
+        })
+        .finally(() => setLoadingEdit(false));
     } else {
       setModal2(!modal2);
     }
+    setLoadingEdit(false);
   };
 
   const HandlerDetailSurat = (id) => {
-    GetDetailSuratMasuk(id).then((res) => {
-      setDetail(res.data);
-      setModal3(!modal3);
-    });
+    setLoadingDetail(true);
+
+    GetDetailSuratMasuk(id)
+      .then((res) => {
+        setDetail(res.data);
+        setModal3(!modal3);
+      })
+      .finally(() => setLoadingDetail(false));
   };
 
   const HandlerTambahBalasan = ({ id, status }) => {
@@ -304,11 +338,11 @@ const SuratMasukPage = () => {
       <Sidebar modal={modal} modal2={modal2} modal3={modal3} />
       <div
         className={`content col-start-2 col-end-6 w-97/100 ${
-          tambah || modal || modal2 || modal3 ? "blur-sm" : ""
+          tambah || modal || modal2 || modal3 ? "blur-sm z-auto" : ""
         }`}
       >
         <div className="navbar pt-5">
-          <h2 className="font-bold text-2xl">Surat Masuk</h2>
+          <h2 className="font-bold text-2xl">Surat Masuk </h2>
         </div>
         <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6">
           <div className="search flex gap-4 justify-between">
@@ -330,7 +364,7 @@ const SuratMasukPage = () => {
               >
                 <div className="grid grid-flow-col gap-2 text-sm items-center py-2">
                   <GoPlus size="1rem" />
-                  <button>Tambah Surat</button>
+                  <button>Tambah Surat {lastpage}</button>
                 </div>
               </div>
             )}
@@ -416,7 +450,11 @@ const SuratMasukPage = () => {
                             {hideActionKakan.includes(auth?.type) ||
                             hideActionSeksi.includes(auth?.type) ? null : (
                               <MdModeEdit
-                                className="text-secondary cursor-pointer text-xl"
+                                className={`text-secondary cursor-pointer text-xl ${
+                                  loadingedit
+                                    ? "opacity-50 pointer-events-none"
+                                    : ""
+                                }`}
                                 type="button"
                                 onClick={() =>
                                   HandlerEditSurat({ id: item.id })
@@ -424,7 +462,11 @@ const SuratMasukPage = () => {
                               />
                             )}
                             <IoMdEye
-                              className="text-yellow-300 cursor-pointer text-xl"
+                              className={`text-yellow-300 cursor-pointer text-xl ${
+                                loadingeDetail
+                                  ? "opacity-50 pointer-events-none"
+                                  : ""
+                              }`}
                               type="button"
                               onClick={() => HandlerDetailSurat(item.id)}
                             />
@@ -508,7 +550,9 @@ const SuratMasukPage = () => {
                     <span className="sr-only">Next</span>
                     <ArrowCircleRight
                       className={`${
-                        surat?.letter?.length < 10 ? "hidden" : ""
+                        surat?.letter?.length < 10 || lastpage === 1
+                          ? "hidden"
+                          : ""
                       } h-7 w-7 text-quaternary`}
                       aria-hidden="true"
                       onClick={() =>
