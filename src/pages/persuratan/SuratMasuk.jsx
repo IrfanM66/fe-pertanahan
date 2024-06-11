@@ -71,6 +71,7 @@ const SuratMasukPage = () => {
       GetSearchSuratMasuk(value)
         .then((res) => {
           setSearchResults(res.data.letter);
+          setLastPage(res.pagination.last_page);
           setLoading(true);
         })
         .catch((error) => {
