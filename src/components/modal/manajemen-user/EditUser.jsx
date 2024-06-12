@@ -8,22 +8,41 @@ const ModalEdit = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
+  const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setError("");
+  };
+
+  const handleRepasswordChange = (e) => {
+    setRepassword(e.target.value);
+    setError("");
+  };
 
   useEffect(() => {
     setName(user?.name);
     setEmail(user?.email);
-    setType(user?.type); // mengambil nilai type dari user
+    setType(user?.type);
   }, [user]);
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
+    if (password != repassword) {
+      setError("Password dan Konfirmasi Password Harus Sama");
+    } else {
+      setError(true);
+    }
+
     let data = {
-      name: event.target.name.value, // nama properti harus sesuai dengan yang diharapkan di backend
+      name: event.target.name.value,
       email: event.target.email.value,
       old_password: event.target.old_password.value,
       new_password: event.target.new_password.value,
       confirm_password: event.target.confirm_password.value,
-      type: event.target.type.value
+      type: event.target.type.value,
     };
     const response = await PutManagemenUser(user.id, data);
     console.log(response);
@@ -36,9 +55,9 @@ const ModalEdit = (props) => {
           return user;
         });
       });
-      HandlerEdit({ status: true }); // panggil HandlerEdit dengan status true
+      HandlerEdit({ status: true });
     } else {
-      HandlerEdit({ status: false }); // panggil HandlerEdit dengan status false
+      HandlerEdit({ status: false });
     }
   };
   if (!modal || !user) {
@@ -93,6 +112,8 @@ const ModalEdit = (props) => {
             placeholder="Masukkan password"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="old_password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="new_password relative grid gap-1">
@@ -104,7 +125,12 @@ const ModalEdit = (props) => {
             placeholder="Masukkan password baru"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="new_password"
+            value={password}
+            onChange={handlePasswordChange}
           />
+          <p className="text-red-500 text-xs flex right-0 left-0 mx-auto my-0 text-start">
+            {error === true ? null : error}
+          </p>
         </div>
         <div className="confirm_password relative grid gap-1">
           <label
@@ -118,7 +144,12 @@ const ModalEdit = (props) => {
             placeholder="Masukkan konfirmasi password"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="confirm_password"
+            value={repassword}
+            onChange={handleRepasswordChange}
           />
+          <p className="text-red-500 text-xs flex right-0 left-0 mx-auto my-0 text-start">
+            {error === true ? null : error}
+          </p>
         </div>
         <div className="type grid gap-1">
           <label htmlFor="type" className="text-custom text-base font-semibold">
