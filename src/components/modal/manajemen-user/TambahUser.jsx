@@ -3,16 +3,39 @@ import {
   PostManagemenUser,
   GetDetailMnagemenUser,
 } from "../../../utils/FetchmanagemenUser";
+import { useState } from "react";
+
 const ModalTambah = (props) => {
   const { modal, HandlerTambah, setUsers } = props;
+  const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setError("");
+  };
+
+  const handleRepasswordChange = (e) => {
+    setRepassword(e.target.value);
+    setError("");
+  };
+
   const HandlerSubmit = async (event) => {
     event.preventDefault();
+    if (password != repassword) {
+      setError("Password dan Konfirmasi Password Harus Sama");
+    } else {
+      setError(true);
+    }
+
     const data = {
       nama: event.target.name.value,
       email: event.target.email.value,
       password: event.target.password.value,
       type: event.target.type.value,
     };
+
     const response = await PostManagemenUser(data);
     if (response.status === true) {
       const { data } = await GetDetailMnagemenUser(response.userId);
@@ -25,10 +48,11 @@ const ModalTambah = (props) => {
   if (!modal) {
     return null;
   }
+
   return (
     <form
       onSubmit={HandlerSubmit}
-      className="fixed bg-white py-4 border-solid rounded-lg drop-shadow-custom z-50 inset-x-38/100 inset-y-1/10"
+      className="fixed bg-white py-2 border-solid rounded-lg drop-shadow-custom z-50 inset-x-38/100 inset-y-1/10"
     >
       <div className="header flex justify-between py-4 w-10/12 m-auto items-center">
         <h3 className="font-semibold text-xl text-custom">Tambah User</h3>
@@ -70,7 +94,12 @@ const ModalTambah = (props) => {
             placeholder="Masukkan password"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="password"
+            value={password}
+            onChange={handlePasswordChange}
           />
+          <p className="text-red-500 text-xs flex right-0 left-0 mx-auto my-0 text-start">
+            {error === true ? null : error}
+          </p>
         </div>
         <div className="repassword relative grid gap-1">
           <label htmlFor="repassword" className="text-custom font-semibold">
@@ -81,7 +110,12 @@ const ModalTambah = (props) => {
             placeholder="Masukkan konfirmasi password"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="repassword"
+            value={repassword}
+            onChange={handleRepasswordChange}
           />
+          <p className="text-red-500 text-xs flex right-0 left-0 mx-auto my-0 text-start">
+            {error === true ? null : error}
+          </p>
         </div>
         <div className="type grid gap-1">
           <label htmlFor="type" className="text-custom text-base font-semibold">

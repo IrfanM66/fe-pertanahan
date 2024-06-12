@@ -23,7 +23,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa"
+  "Seksi Pengendalian & Penanganan Sengketa",
 ];
 
 const Sidebar = ({ modal, modal2, modal3 }) => {
@@ -56,7 +56,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined
+      progress: undefined,
     });
     setTimeout(() => {
       navigate("/");
@@ -69,11 +69,14 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
         modal || modal2 || modal3 ? "blur-sm" : null
       }`}
     >
-      <div className="self-center xl:flex items-center mx-auto justify-center">
-        <div className="xl:w-1/4 xl:mx-0 ">
-          <img src={logo} alt="" className="mx-auto xl:mx-0 w-2/5 xl:w-5/6" />
+      <div className="self-center xl:flex items-center justify-start">
+        <div className="xl:w-1/4 xl:mx-0">
+          <img src={logo} alt="" className="mx-5 xl:mx-4 w-full xl:w-full" />
         </div>
-        <h3 className="hidden text-base xl:block font-bold">ATR/BPN JEMBER</h3>
+        <div className="hidden xl:block text-center xl:text-left m-5">
+          <h3 className="text-base font-black m-0">SIMDIS</h3>
+          <p className="m-0">Sistem Informasi Manajemen Disposisi</p>
+        </div>
       </div>
       <div className="menu mx-8 row-start-3 row-end-8 xl:mx-6">
         <ul>

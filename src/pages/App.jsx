@@ -29,7 +29,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       } else {
         sessionStorage.setItem("token", res.token);
@@ -40,7 +40,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
         GetProfile().then((res) => setAuth(res.data));
         setTimeout(() => {
@@ -52,9 +52,6 @@ function App() {
 
   const emailRef = useRef(null);
   useEffect(() => {
-    // if(auth){
-    //   navigate('/dashboard')
-    // }
     emailRef.current.focus();
   }, []);
 
@@ -129,11 +126,12 @@ function App() {
                 id="passwordType"
                 value={password}
                 onChange={setPassword}
+                
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-4"
+                className="absolute right-3 top-4 m-px"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>

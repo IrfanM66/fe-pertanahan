@@ -26,7 +26,6 @@ const ModalEdit = (props) => {
       type: event.target.type.value,
     };
     const response = await PutManagemenUser(user.id, data);
-    console.log(response);
     if (response.status === true) {
       data.id = user.id;
       data.name = data.nama;
