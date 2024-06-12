@@ -8,7 +8,7 @@ import { GoPlus } from "react-icons/go";
 import {
   GetManagemenUser,
   GetDetailMnagemenUser,
-  DelManagemenUser,
+  DelManagemenUser
 } from "../../utils/FetchmanagemenUser";
 import ModalEdit from "../../components/modal/manajemen-user/EditUser";
 import ModalDetail from "../../components/modal/manajemen-user/DetailUser";
@@ -24,7 +24,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const ManajemenUserPage = () => {
@@ -59,7 +59,7 @@ const ManajemenUserPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -68,7 +68,7 @@ const ManajemenUserPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setTambah((prev) => !prev);
@@ -90,7 +90,10 @@ const ManajemenUserPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
+      });
+      GetManagemenUser().then((res) => {
+        setUsers(res.data);
       });
     } else if (status == false) {
       Swal.fire({
@@ -98,7 +101,7 @@ const ManajemenUserPage = () => {
         text: "Lengkapi data yang kosong!",
         icon: "error",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setEdit((prev) => !prev);

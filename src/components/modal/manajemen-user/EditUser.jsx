@@ -12,24 +12,22 @@ const ModalEdit = (props) => {
   useEffect(() => {
     setName(user?.name);
     setEmail(user?.email);
-    setType(2);
+    setType(user?.type); // mengambil nilai type dari user
   }, [user]);
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
     let data = {
-      nama: event.target.name.value,
+      name: event.target.name.value, // nama properti harus sesuai dengan yang diharapkan di backend
       email: event.target.email.value,
       old_password: event.target.old_password.value,
       new_password: event.target.new_password.value,
       confirm_password: event.target.confirm_password.value,
-      type: event.target.type.value,
+      type: event.target.type.value
     };
     const response = await PutManagemenUser(user.id, data);
+    console.log(response);
     if (response.status === true) {
-      data.id = user.id;
-      data.name = data.nama;
-      delete data.nama;
       setUsers((prev) => {
         return prev.map((user) => {
           if (user.id === data.id) {
@@ -38,15 +36,14 @@ const ModalEdit = (props) => {
           return user;
         });
       });
-      HandlerEdit({ status: response.status });
-    }else{
-      HandlerEdit({ status: false });
+      HandlerEdit({ status: true }); // panggil HandlerEdit dengan status true
+    } else {
+      HandlerEdit({ status: false }); // panggil HandlerEdit dengan status false
     }
   };
   if (!modal || !user) {
     return null;
   }
-
   return (
     <form
       onSubmit={HandlerSubmit}
@@ -134,7 +131,7 @@ const ModalEdit = (props) => {
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
-           <option className="font-normal" value="0">
+            <option className="font-normal" value="0">
               Admin
             </option>
             <option className="font-normal" value="1">
@@ -161,7 +158,11 @@ const ModalEdit = (props) => {
           </select>
         </div>
         <div className="button grid gap-8 grid-flow-col text-white font-semibold text-center">
-          <button type="button" onClick={HandlerEdit} className="grid grid-flow-col gap-2 items-center py-2 bg-red-500 rounded-lg">
+          <button
+            type="button"
+            onClick={HandlerEdit}
+            className="grid grid-flow-col gap-2 items-center py-2 bg-red-500 rounded-lg"
+          >
             <p>Batal</p>
           </button>
           <button
