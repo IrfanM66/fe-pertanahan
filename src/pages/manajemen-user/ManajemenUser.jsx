@@ -75,7 +75,7 @@ const ManajemenUserPage = () => {
     }
   };
 
-  const HandlerEdit = ({ id, status }) => {
+  const HandlerEdit = ({ id, status, message }) => {
     if (id) {
       GetDetailMnagemenUser(id).then((res) => {
         setDetUser(res.data);
@@ -98,7 +98,7 @@ const ManajemenUserPage = () => {
     } else if (status == false) {
       Swal.fire({
         title: "Gagal",
-        text: "Lengkapi data yang kosong!",
+        text: message || "Lengkapi data yang kosong!",
         icon: "error",
         showConfirmButton: false,
         timer: 1000

@@ -8,6 +8,7 @@ const ModalEdit = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
+  const [oldpassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [error, setError] = useState("");
@@ -30,36 +31,50 @@ const ModalEdit = (props) => {
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
-    if (password != repassword) {
+    const password = event.target.new_password.value;
+    const repassword = event.target.confirm_password.value;
+
+    if (password !== repassword) {
       setError("Password dan Konfirmasi Password Harus Sama");
+      return;
     } else {
-      setError(true);
+      setError("");
     }
 
     let data = {
       name: event.target.name.value,
       email: event.target.email.value,
       old_password: event.target.old_password.value,
-      new_password: event.target.new_password.value,
+      password: event.target.new_password.value,
       confirm_password: event.target.confirm_password.value,
-      type: event.target.type.value,
+      type: event.target.type.value
     };
-    const response = await PutManagemenUser(user.id, data);
-    console.log(response);
-    if (response.status === true) {
-      setUsers((prev) => {
-        return prev.map((user) => {
-          if (user.id === data.id) {
-            return data;
-          }
-          return user;
+
+    try {
+      const response = await PutManagemenUser(user.id, data);
+      console.log(response);
+      if (response.status === true) {
+        setUsers((prev) => {
+          return prev.map((userItem) => {
+            if (userItem.id === user.id) {
+              return { ...userItem, ...data };
+            }
+            return userItem;
+          });
         });
-      });
-      HandlerEdit({ status: true });
-    } else {
-      HandlerEdit({ status: false });
+        HandlerEdit({ status: true });
+      } else {
+        HandlerEdit({ status: false, message: response.message });
+      }
+    } catch (error) {
+      let errorMessage = "Terjadi kesalahan";
+      if (error.response && error.response.status === 401) {
+        errorMessage = "Password lama Salah";
+      }
+      HandlerEdit({ status: false, message: errorMessage });
     }
   };
+
   if (!modal || !user) {
     return null;
   }
@@ -112,8 +127,8 @@ const ModalEdit = (props) => {
             placeholder="Masukkan password"
             className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
             id="old_password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={oldpassword}
+            onChange={(e) => setOldPassword(e.target.value)}
           />
         </div>
         <div className="new_password relative grid gap-1">
