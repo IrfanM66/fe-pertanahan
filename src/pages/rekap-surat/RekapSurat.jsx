@@ -21,10 +21,10 @@ const RekapSuratPage = () => {
   const [fileUrl, setFileUrl] = useState("");
   const [loading, setLoading] = useState(true);
   let [searchParams, setSearchParams] = useSearchParams();
-  const [initialSurat, setInitialSurat] = useState({});
   const [searchResults, setSearchResults] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-  const [lastpage, setLastPage] = useState([]) || ["last_page=1"];
+  const [lastpage, setLastPage] = useState(1);
+  const [banyaksurat, setBanyakSurat] = useState("");
   const page = searchParams.get("page") || 1;
   const currentKategori = searchParams.get("kategori") || kategori;
   const currentTanggal = searchParams.get("tanggal") || tanggal;
@@ -43,7 +43,7 @@ const RekapSuratPage = () => {
       GetRekapSurat(page).then((res) => {
         setSurat(res.data);
         setLastPage(res.pagination.last_page);
-        setInitialSurat(res.data);
+        setBanyakSurat(res.data.letter.length);
         setLoading(false);
       });
     } else {
@@ -53,11 +53,13 @@ const RekapSuratPage = () => {
             GetRekapSurat(page).then((res) => {
               setSurat(res.data);
               setLastPage(res.pagination.last_page);
+              setBanyakSurat(res.data.letter.length);
               setLoading(false);
             });
           } else {
             setSurat(res.data);
             setLastPage(res.pagination.last_page);
+            setBanyakSurat(res.data.letter.length);
             setLoading(false);
           }
         }
@@ -88,19 +90,29 @@ const RekapSuratPage = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setLoading(true);
     setSearchParams({
       kategori: currentKategori,
       tanggal: currentTanggal,
       page: newPage
     });
-    GetCategoriesRekapSurat(newPage, currentKategori, currentTanggal).then(
-      (res) => {
+    setLoading(true);
+    if (currentKategori === "Kategori Surat" && !currentTanggal) {
+      GetRekapSurat(newPage).then((res) => {
         setSurat(res.data);
         setLastPage(res.pagination.last_page);
+        setBanyakSurat(res.data.letter.length);
         setLoading(false);
-      }
-    );
+      });
+    } else {
+      GetCategoriesRekapSurat(newPage, currentKategori, currentTanggal).then(
+        (res) => {
+          setSurat(res.data);
+          setLastPage(res.pagination.last_page);
+          setBanyakSurat(res.data.letter.length);
+          setLoading(false);
+        }
+      );
+    }
   };
 
   const handleResetFilter = () => {
@@ -121,10 +133,7 @@ const RekapSuratPage = () => {
       <Sidebar />
       <div className="content col-start-2 col-end-6 w-97/100">
         <div className="navbar pt-5">
-          <h2 className="font-bold text-2xl">
-            Rekap Surat {page}
-            {lastpage}
-          </h2>
+          <h2 className="font-bold text-2xl">Rekap Surat</h2>
         </div>
         <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6 font-poppins">
           <div className="search grid grid-flow-col grid-cols-8 gap-3">
