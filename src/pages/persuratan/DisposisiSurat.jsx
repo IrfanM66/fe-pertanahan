@@ -15,7 +15,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const DisposisiSuratPage = () => {
@@ -40,7 +40,7 @@ const DisposisiSuratPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -49,7 +49,7 @@ const DisposisiSuratPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setModal((prev) => !prev);
@@ -99,7 +99,7 @@ const DisposisiSuratPage = () => {
               <div className="disposisi">
                 <p className="font-bold">Disposisi</p>
                 <ul className="list-disc list-inside">
-                  {disposisi?.disposition_process.map((item, index) => (
+                  {disposisi?.disposition_process?.map((item, index) => (
                     <li className="text-lg font-light pl-3" key={index}>
                       {item}
                     </li>

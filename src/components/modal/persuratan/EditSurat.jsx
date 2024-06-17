@@ -12,12 +12,24 @@ const ModalEditSurat = (props) => {
   const [letter_date, setLetterDate] = useState(null);
   const [received_date, setReceivedDate] = useState(null);
   const [letters_type, setLettersType] = useState(null);
+  const [customLetterType, setCustomLetterType] = useState("");
+
+  const handleLetterTypeChange = (e) => {
+    setLettersType(e.target.value);
+  };
+
+  const handleCustomLetterTypeChange = (e) => {
+    setCustomLetterType(e.target.value);
+  };
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("reference_number", no);
-    formData.append("letters_type", letters_type);
+    formData.append(
+      "letters_type",
+      letters_type === "Lainnya" ? customLetterType : letters_type
+    );
     formData.append("letter_date", letter_date);
     formData.append("received_date", received_date);
     formData.append("from", name);
@@ -114,7 +126,6 @@ const ModalEditSurat = (props) => {
               placeholder={no ? no : "Masukkan Nomor Surat"}
               id="reference_number"
               name="reference_number"
-              // value={no}
               onChange={(e) => setNo(e.target.value)}
             />
           </div>
@@ -197,17 +208,25 @@ const ModalEditSurat = (props) => {
               id="letters_type"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
               name="letters_type"
-              required
+              value={letters_type}
+              onChange={handleLetterTypeChange}
               placeholder={letters_type}
+              required
             >
-              <option className="font-normal" value="penting">
-                Surat 1
+              <option className="font-normal" value={letters_type}>
+                {letters_type}
               </option>
-              <option className="font-normal" value="biasa">
-                Surat 2
+              <option className="font-normal" value="Pengaduan">
+                Pengaduan
               </option>
-              <option className="font-normal" value="tidak penting">
-                Surat 3
+              <option className="font-normal" value="Permintaan Data">
+                Permintaan Data
+              </option>
+              <option className="font-normal" value="Surat Sidang">
+                Surat Sidang
+              </option>
+              <option className="font-normal" value="Lainnya">
+                Lainnya
               </option>
             </select>
           </div>
@@ -230,8 +249,27 @@ const ModalEditSurat = (props) => {
               name="file"
             />
           </div>
+          {letters_type === "Lainnya" && (
+            <div className="custom_letters_type grid gap-1 mt-2">
+              <label
+                htmlFor="custom_letters_type"
+                className="text-custom text-base font-semibold"
+              >
+                Jenis Surat Lainnya
+              </label>
+              <input
+                type="text"
+                id="custom_letters_type"
+                className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
+                placeholder="Masukkan jenis surat"
+                value={customLetterType}
+                onChange={handleCustomLetterTypeChange}
+                required={letters_type === "Lainnya"}
+              />
+            </div>
+          )}
         </div>
-        <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto">
+        <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center mt-10 my-auto">
           <button
             type="button"
             onClick={HandlerEditSurat}

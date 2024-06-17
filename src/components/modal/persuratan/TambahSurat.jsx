@@ -4,7 +4,7 @@ import FormatDate from "../../../utils/Date";
 import { FaFile } from "react-icons/fa";
 import {
   PostSuratMasuk,
-  GetDetailSuratMasuk,
+  GetDetailSuratMasuk
 } from "../../../utils/FetchSuratMasuk";
 
 const ModalTambahSurat = (props) => {
@@ -12,17 +12,27 @@ const ModalTambahSurat = (props) => {
   const [letter_date, setLetterDate] = useState(FormatDate());
   const [received_date, setReceivedDate] = useState(FormatDate());
   const [loadingButton, setLoadingButton] = useState();
-
+  const [letterType, setLetterType] = useState("Pengaduan");
+  const [customLetterType, setCustomLetterType] = useState("");
   if (!modal) {
     return null;
   }
+  const handleLetterTypeChange = (e) => {
+    setLetterType(e.target.value);
+  };
 
+  const handleCustomLetterTypeChange = (e) => {
+    setCustomLetterType(e.target.value);
+  };
   const HandlerSubmit = async (e) => {
     e.preventDefault();
     setLoadingButton(true);
     const formData = new FormData();
     formData.append("reference_number", e.target.reference_number.value);
-    formData.append("letters_type", e.target.letters_type.value);
+    formData.append(
+      "letters_type",
+      letterType === "Lainnya" ? customLetterType : letterType
+    );
     formData.append("letter_date", letter_date);
     formData.append("received_date", received_date);
     formData.append("from", e.target.nama.value);
@@ -35,7 +45,7 @@ const ModalTambahSurat = (props) => {
       if (response.status) {
         setSurat((prev) => ({
           letter: [...prev.letter, response.data.letter],
-          file: [...(prev.file || []), response.data.file],
+          file: [...(prev.file || []), response.data.file]
         }));
       }
     }
@@ -106,7 +116,6 @@ const ModalTambahSurat = (props) => {
               onChange={(e) => setReceivedDate(e.target.value)}
             />
           </div>
-
           <div className="perihal grid gap-1">
             <label
               htmlFor="perihal"
@@ -137,7 +146,6 @@ const ModalTambahSurat = (props) => {
               name="nama"
             />
           </div>
-
           <div className="letters_type grid gap-1">
             <label
               htmlFor="letters_type"
@@ -149,22 +157,24 @@ const ModalTambahSurat = (props) => {
               id="letters_type"
               className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
               name="letters_type"
+              placeholder="Jenis Surat"
+              value={letterType}
+              onChange={handleLetterTypeChange}
             >
-              <option className="font-normal" value="">
-                Jenis Surat
+              <option className="font-normal" value="Pengaduan">
+                Pengaduan
               </option>
-              <option className="font-normal" value="penting">
-                Surat 1
+              <option className="font-normal" value="Permintaan Data">
+                Permintaan Data
               </option>
-              <option className="font-normal" value="biasa">
-                Surat 2
+              <option className="font-normal" value="Surat Sidang">
+                Surat Sidang
               </option>
-              <option className="font-normal" value="tidak penting">
-                Surat 3
+              <option className="font-normal" value="Lainnya">
+                Lainnya
               </option>
             </select>
           </div>
-
           <div className="file grid gap-1 relative">
             <label
               htmlFor="file"
@@ -183,8 +193,26 @@ const ModalTambahSurat = (props) => {
               name="file"
             />
           </div>
+          {letterType === "Lainnya" && (
+            <div className="custom_letters_type grid gap-1 mt-2">
+              <label
+                htmlFor="custom_letters_type"
+                className="text-custom text-base font-semibold"
+              >
+                Jenis Surat Lainnya
+              </label>
+              <input
+                type="text"
+                id="custom_letters_type"
+                className="outline-none border-2 border-quaternary w-full py-2.5 px-3 text-sm text-custom rounded-lg"
+                placeholder="Masukkan jenis surat"
+                value={customLetterType}
+                onChange={handleCustomLetterTypeChange}
+              />
+            </div>
+          )}
         </div>
-        <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto">
+        <div className="modal-footer flex justify-end gap-5 text-white font-semibold text-center my-auto mt-10">
           <button
             type="button"
             onClick={HandlerTambahSurat}

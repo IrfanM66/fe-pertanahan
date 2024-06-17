@@ -12,7 +12,7 @@ import {
   GetSuratMasuk,
   GetDetailSuratMasuk,
   DeleteSuratMasuk,
-  GetSearchSuratMasuk,
+  GetSearchSuratMasuk
 } from "../../utils/FetchSuratMasuk";
 import ModalTambahBalasan from "../../components/modal/persuratan/TambahBalasan";
 import Swal from "sweetalert2";
@@ -32,7 +32,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const SuratMasukPage = () => {
@@ -133,7 +133,7 @@ const SuratMasukPage = () => {
     const overdueLetters =
       surat.letter
         ?.filter((item) => {
-          const isDateExceeded = checkDateExceeded(item.letter_date);
+          const isDateExceeded = checkDateExceeded(item.disposition_date);
           return isDateExceeded && item.status !== "Selesai";
         })
         .map((item) => `Surat dari ${item.from} (${item.letter_date})`) || [];
@@ -149,7 +149,7 @@ const SuratMasukPage = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
       });
       setInitialLoad(false);
@@ -179,7 +179,7 @@ const SuratMasukPage = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#828282",
       cancelButtonText: "Batal",
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Hapus"
     }).then((result) => {
       if (result.isConfirmed) {
         DeleteSuratMasuk(id).then((res) => {
@@ -194,7 +194,7 @@ const SuratMasukPage = () => {
             return {
               ...prev,
               letter: updatedLetter,
-              file: updatedFile,
+              file: updatedFile
             };
           });
           Swal.fire({
@@ -202,7 +202,7 @@ const SuratMasukPage = () => {
             text: "Data berhasil dihapus",
             icon: "success",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1500
           });
         });
       }
@@ -223,7 +223,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -232,7 +232,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setModal(!modal);
@@ -249,7 +249,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     }
     if (id) {
@@ -289,7 +289,7 @@ const SuratMasukPage = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     } else if (status == false) {
       Swal.fire({
@@ -298,7 +298,7 @@ const SuratMasukPage = () => {
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1000
       });
     } else {
       setTambah(!tambah);
@@ -411,19 +411,21 @@ const SuratMasukPage = () => {
                       ? searchResults
                       : surat?.letter || []) || []
                   ).map((item, index) => {
-                    const isDateExceeded = checkDateExceeded(item.letter_date);
+                    const isDateExceeded = checkDateExceeded(
+                      item.disposition_date
+                    );
                     return (
                       <tr
                         key={index}
                         className={`${
-                          isDateExceeded && item.status == "Pending"
+                          isDateExceeded && item.status === "Proses"
                             ? "bg-red-200"
                             : (index + 1) % 2 === 0
                             ? "bg-quinary"
                             : ""
                         }`}
                       >
-                        <td className="py-2 text-sm ">
+                        <td className="py-2 text-sm">
                           {index + 1 + (page - 1) * 10}
                         </td>
                         <td className="py-2 text-sm">{item.from}</td>
@@ -432,12 +434,22 @@ const SuratMasukPage = () => {
                         <td className="py-2 text-sm">
                           <p
                             className={`${
-                              item.status !== "Pending"
+                              isDateExceeded && item.status === "Proses"
+                                ? "bg-red-300 text-red-600"
+                                : item.status === "Proses"
+                                ? "bg-yellow-200 text-yellow-600"
+                                : item.status === "Selesai"
                                 ? "bg-green-200 text-green-500"
-                                : "bg-red-300 text-red-600"
-                            } rounded-lg py-1 text-s`}
+                                : item.status === "Baru"
+                                ? "bg-blue-200 text-blue-500"
+                                : isDateExceeded && item.status !== "Selesai"
+                                ? "bg-red-300 text-red-600"
+                                : "bg-red-300 text-red-600" // default red background for other cases
+                            } rounded-lg py-1 px-1 text-s`}
                           >
-                            {item.status}
+                            {isDateExceeded && item.status === "Proses"
+                              ? "Late"
+                              : item.status}
                           </p>
                         </td>
                         <td className="py-2">
