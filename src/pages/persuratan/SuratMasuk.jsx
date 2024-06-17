@@ -133,7 +133,8 @@ const SuratMasukPage = () => {
     const overdueLetters =
       surat.letter
         ?.filter((item) => {
-          const isDateExceeded = checkDateExceeded(item.disposition_date);
+          const isDateExceeded = checkDateExceeded(item?.disposition_date);
+          console.log("tanggal disposisi", item?.disposition_date);
           return isDateExceeded && item.status !== "Selesai";
         })
         .map((item) => `Surat dari ${item.from} (${item.letter_date})`) || [];
@@ -309,9 +310,17 @@ const SuratMasukPage = () => {
     });
   };
   const checkDateExceeded = (date) => {
+    if (!date) {
+      return false; // Mengembalikan false jika date adalah null atau undefined
+    }
+
     const currentDate = new Date();
     const letterDate = new Date(date);
     const differenceInDays = (currentDate - letterDate) / (1000 * 3600 * 24);
+
+    console.log("tanggal disposisi 2", date);
+    console.log("hasil", differenceInDays);
+
     return differenceInDays > 3;
   };
 
