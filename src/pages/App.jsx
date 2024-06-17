@@ -29,7 +29,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
       } else {
         sessionStorage.setItem("token", res.token);
@@ -40,7 +40,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
         GetProfile().then((res) => setAuth(res.data));
         setTimeout(() => {
@@ -98,7 +98,7 @@ function App() {
             <h2 className="text-6xl m-0 font-bold text-start text-tertiary">
               SIMDIS
               <h2 className="text-3xl m-0 font-semibold text-start mt-4 text-white">
-                Sistem Informasi Manajemen Disposisi
+                Sistem Informasi Manajemen Disposisi Kantah Jember
               </h2>
             </h2>
             <p className="text-start m-0 font-medium text-quinary">
@@ -126,7 +126,6 @@ function App() {
                 id="passwordType"
                 value={password}
                 onChange={setPassword}
-                
               />
               <button
                 type="button"
