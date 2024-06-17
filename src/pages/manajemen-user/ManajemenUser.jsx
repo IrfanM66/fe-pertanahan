@@ -49,7 +49,7 @@ const ManajemenUserPage = () => {
     setSearch(e.target.value);
   };
 
-  const HandlerTambah = ({ status }) => {
+  const HandlerTambah = ({ status, message }) => {
     if (status) {
       setTambah((prev) => !prev);
       toast.success("User berhasil ditambahkan", {
@@ -64,7 +64,7 @@ const ManajemenUserPage = () => {
     } else if (status == false) {
       Swal.fire({
         title: "Gagal!",
-        text: "Lengkapi data yang kosong!",
+        text: message || "Lengkapi data yang kosong!",
         icon: "warning",
         iconColor: "#FB0017",
         showConfirmButton: false,

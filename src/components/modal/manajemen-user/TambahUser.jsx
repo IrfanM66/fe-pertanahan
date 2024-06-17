@@ -1,7 +1,7 @@
 import { AiOutlineCloseSquare } from "react-icons/ai";
 import {
   PostManagemenUser,
-  GetDetailMnagemenUser,
+  GetDetailMnagemenUser
 } from "../../../utils/FetchmanagemenUser";
 import { useState } from "react";
 
@@ -23,28 +23,44 @@ const ModalTambah = (props) => {
 
   const HandlerSubmit = async (event) => {
     event.preventDefault();
-    if (password != repassword) {
+
+    if (password !== repassword) {
       setError("Password dan Konfirmasi Password Harus Sama");
+      return;
     } else {
-      setError(true);
+      setError("");
     }
 
     const data = {
       nama: event.target.name.value,
       email: event.target.email.value,
       password: event.target.password.value,
-      type: event.target.type.value,
+      type: event.target.type.value
     };
 
-    const response = await PostManagemenUser(data);
-    if (response.status === true) {
-      const { data } = await GetDetailMnagemenUser(response.userId);
-      setUsers((prev) => [...prev, data]);
-      HandlerTambah({ status: response.status });
-    } else {
-      HandlerTambah({ status: false });
+    try {
+      const response = await PostManagemenUser(data);
+      if (response.status === true) {
+        const { data } = await GetDetailMnagemenUser(response.userId);
+        setUsers((prev) => [...prev, data]);
+        HandlerTambah({ status: true });
+      } else {
+        HandlerTambah({ status: false, message: response.message });
+      }
+    } catch (error) {
+      let errorMessage = "Terjadi kesalahan";
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = "Error dalam proses permintaan";
+        } else if (error.response.status === 422) {
+          errorMessage =
+            "Validasi gagal. Mohon periksa kembali data yang dimasukkan.";
+        }
+      }
+      HandlerTambah({ status: false, message: errorMessage });
     }
   };
+
   if (!modal) {
     return null;
   }
