@@ -93,7 +93,7 @@ function App() {
         <div className="grid items-center justify-items-center bg-gradient-to-b from-secondary to-primary rounded-tr-3xl rounded-bl-3xl">
           <form
             onSubmit={handlerLogin}
-            className="w-7/12 grid gap-5 px-10 py-3 rounded-md relative"
+            className="w-7/12 grid gap-5 xl:px-10 py-3 rounded-md relative sm:px-1"
           >
             <h2 className="text-6xl m-0 font-bold text-start text-tertiary">
               SIMDIS

@@ -71,7 +71,11 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
     >
       <div className="self-center xl:flex items-center justify-start mt-10">
         <div className="xl:w-1/4 xl:mx-0">
-          <img src={logo} alt="" className="mx-5 xl:mx-4 w-full xl:w-full" />
+          <img
+            src={logo}
+            alt=""
+            className="mx-5 xl:mx-4 w-full xl:w-full sm:w-4/6"
+          />
         </div>
         <div className="hidden xl:block text-center xl:text-left m-5">
           <h3 className="text-base font-black m-0">SIMDIS</h3>
@@ -137,7 +141,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
                       location.pathname == "/surat-masuk"
                         ? "bg-secondary text-white text-sm"
                         : "text-custom font-semibold"
-                    } py-2 px-5 rounded-md`}
+                    } sm:pl-1 py-2 xl:px-5 rounded-md `}
                   >
                     Surat Masuk
                   </li>
@@ -148,7 +152,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
                       location.pathname == "/balasan-surat"
                         ? "bg-secondary text-white text-sm"
                         : "text-custom font-semibold"
-                    } py-2 px-5 rounded-md`}
+                    } sm:pl-1 py-2 xl:px-5 rounded-md `}
                   >
                     Balasan Surat
                   </li>
