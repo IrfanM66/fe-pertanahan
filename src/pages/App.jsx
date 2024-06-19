@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GetProfile } from "../utils/FetchUsers";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import LoginBackground from "../assets/bg-papuma.jpg";
 
 function App() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       } else {
         sessionStorage.setItem("token", res.token);
@@ -40,7 +41,7 @@ function App() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
         GetProfile().then((res) => setAuth(res.data));
         setTimeout(() => {
@@ -77,14 +78,22 @@ function App() {
   }, [password]);
 
   return (
-    <div className="grid h-screen">
-      <div className="grid grid-flow-col grid-cols-2 m-5 font-poppins">
-        <div className="grid justify-items-center items-center ">
-          <div className="grid justify-items-center w-10/12 gap-5">
+    <div className="relative grid h-screen">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent"></div>
+        <img
+          src={LoginBackground}
+          className="object-cover h-full w-full"
+          alt="Background"
+        />
+      </div>
+      <div className="relative grid grid-flow-col grid-cols-2 m-5 font-poppins z-10">
+        <div className="grid justify-items-center items-center">
+          <div className="grid justify-items-center w-10/12 gap-5 ">
             <div className="grid justify-items-center w-11/12 gap-5">
               <img
-                src="logo3.png"
-                alt=""
+                src="logo2.png"
+                alt="Logo"
                 className="flex justify-content-center w-5/6 pr-8"
               />
             </div>

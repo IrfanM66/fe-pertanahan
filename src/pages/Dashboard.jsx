@@ -7,6 +7,7 @@ import { IoIosNotifications } from "react-icons/io";
 import ModalNotification from "../components/modal/Notification";
 import UseAuth from "../hooks/UseAuth";
 import { Notification } from "../utils/FetchSuratMasuk";
+
 const hideActionSeksi = [
   "Kasubag. TU",
   "Seksi Penetapan Hak & Pendaftaran",

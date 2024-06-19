@@ -1,4 +1,4 @@
-import logo from "../assets/logo2.png";
+import logo from "../assets/logo3.png";
 import { useState } from "react";
 import { GoHome } from "react-icons/go";
 import { SlEnvolopeLetter } from "react-icons/sl";
