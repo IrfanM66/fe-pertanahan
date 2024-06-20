@@ -1,4 +1,4 @@
-const url = "https://api.persuratankantah.xyz/api"
+const url = "https://simdiskantahjember.com/api"
 const Login = async(email,password) => {
     const response = await fetch(url+'/login',{
         method: 'POST',
