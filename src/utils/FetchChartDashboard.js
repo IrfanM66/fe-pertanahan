@@ -1,4 +1,4 @@
-const url = "https://api.persuratankantah.xyz/api";
+const url = "https://simdiskantahjember.com/api";
 
 export const GetDashboard = async () => {
   const response = await fetch(url + "/show-dashboard", {
