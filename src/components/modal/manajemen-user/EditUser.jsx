@@ -8,8 +8,8 @@ const ModalEdit = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [type, setType] = useState("");
-  const [oldpassword, setOldPassword] = useState("");
-  const [password, setPassword] = useState("");
+  const [oldpassword, setOldPassword] = useState(null);
+  const [password, setPassword] = useState(null);
   const [repassword, setRepassword] = useState("");
   const [error, setError] = useState("");
 
@@ -52,6 +52,8 @@ const ModalEdit = (props) => {
 
     try {
       const response = await PutManagemenUser(user.id, data);
+      console.log("id:", data);
+
       console.log(response);
       if (response.status === true) {
         setUsers((prev) => {
