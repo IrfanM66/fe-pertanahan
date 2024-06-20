@@ -1,4 +1,4 @@
-const url = "https://api.persuratankantah.xyz/api";
+const url = "https://simdiskantahjember.com/api";
 
 const GetRekapSurat = async (page) => {
   const response = await fetch(url + "/show-rekap?page=" + page, {
