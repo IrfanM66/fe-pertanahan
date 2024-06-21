@@ -106,8 +106,8 @@ const ModalTambahBalasan = (props) => {
               <option className="font-normal" value="Pending">
                 Pilih Status Surat
               </option>
-              <option className="font-normal" value="Pending">
-                Pending
+              <option className="font-normal" value="Proses">
+                Proses
               </option>
               <option className="font-normal" value="Selesai">
                 Selesai
