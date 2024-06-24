@@ -1,4 +1,4 @@
-const url = "https://simdiskantahjember.com/api";
+const url = "https://api.simdiskantahjember.com/api";
 
 const GetSuratMasuk = async (page) => {
   const response = await fetch(url + "/show-letters?page=" + page, {
