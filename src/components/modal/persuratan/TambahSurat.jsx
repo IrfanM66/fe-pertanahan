@@ -44,8 +44,8 @@ const ModalTambahSurat = (props) => {
       const response = await GetDetailSuratMasuk(data.letter.id);
       if (response.status) {
         setSurat((prev) => ({
-          letter: [...prev.letter, response.data.letter],
-          file: [...(prev.file || []), response.data.file]
+          letter: [...prev?.letter, response.data.letter],
+          file: [...(prev?.file || []), response.data.file]
         }));
       }
     }
