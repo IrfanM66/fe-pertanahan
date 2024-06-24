@@ -135,7 +135,7 @@ function App() {
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+              className="w-full py-3 bg-tertiary text-white font-semibold rounded-lg hover:bg-pentary focus:outline-none focus:bg-indigo-700"
             >
               LOGIN
             </button>
@@ -204,7 +204,7 @@ function App() {
             </div>
             <button
               type="submit"
-              className="bg-tertiary rounded-lg w-full justify-self-center h-10 font-bold text-white font-sans mt-3 hover:bg-pentary"
+              className=" rounded-lg w-full justify-self-center h-10 font-bold bg-tertiary text-white font-sans mt-3 hover:bg-pentary"
             >
               LOGIN
             </button>
