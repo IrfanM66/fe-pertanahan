@@ -93,7 +93,7 @@ const DashboardPage = () => {
             hideActionSeksi.includes(auth?.type)
               ? "xl:grid-cols-3"
               : "xl:grid-cols-4"
-          }  gap-5 md:grid-cols-2 xl:grid-flow-col mt-4 font-semibold text-base align-item-center sm:grid-cols-2`}
+          }  gap-5 grid-cols-2 xl:grid-flow-col mt-4 font-semibold text-base align-item-center `}
         >
           <CardDashboard
             title="Surat Masuk"

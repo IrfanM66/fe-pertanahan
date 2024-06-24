@@ -385,7 +385,7 @@ const SuratMasukPage = () => {
               </div>
             )}
           </div>
-          <div className="tabel mt-7 sm:h-100 sm:overflow-y-auto lg:overflow-y-visible mb-4 overflow-auto">
+          <div className="tabel mt-7 sm:h-100  mb-4 overflow-auto">
             <table className="table-auto w-full text-center text-sm font-normal font-poppins ">
               <thead className="text-white bg-secondary">
                 <tr>

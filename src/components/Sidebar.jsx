@@ -79,10 +79,10 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
     <div className="relative w-auto xl:w-auto ">
       <div
         className={`sidebar fixed z-50 xl:static transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          sidebarOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 grid h-screen grid-rows-8 bg-white drop-shadow-custom font-poppins text-sm py-1 ${
           modal || modal2 || modal3 ? "blur-sm" : ""
-        }`}
+        }h-screen`}
       >
         <div className="grid grid-cols-6 self-center xl:flex items-center justify-start mt-10 ">
           <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0   ">
