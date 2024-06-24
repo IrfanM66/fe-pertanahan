@@ -85,7 +85,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
         }`}
       >
         <div className="grid grid-cols-6 self-center xl:flex items-center justify-start mt-10 ">
-          <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0 ">
+          <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0   ">
             <img src={logo} alt="Logo" className=" " />
           </div>
           <div className="  col-start-2 col-end-6  text-start md:text-left m-5 w-auto">
@@ -237,13 +237,13 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
           </ul>
         </div>
         <div className="account row-span-8">
-          <div className="flex items-center p-2">
+          <div className="flex items-center p-2 ">
             <div
-              className={`flex ms-3 items-center ${
+              className={`flex ms-3 items-center ml-10 ${
                 location.pathname === "/profile" ? " text-white" : ""
               }`}
             >
-              <Link to={"/profile"} className="flex items-center space-x-2">
+              <Link to={"/profile"} className="flex items-center space-x-2 ">
                 <div className="b p-2 rounded-full">
                   <CgProfile size="1.5rem" />
                 </div>
