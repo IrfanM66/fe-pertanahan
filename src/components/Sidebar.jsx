@@ -18,7 +18,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa",
+  "Seksi Pengendalian & Penanganan Sengketa"
 ];
 
 const Sidebar = ({ modal, modal2, modal3 }) => {
@@ -68,7 +68,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
     setTimeout(() => {
       navigate("/");
@@ -76,15 +76,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
   };
 
   return (
-    <div className="relative">
-      <div className="block xl:hidden p-4">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-2xl"
-        >
-          {sidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
-      </div>
+    <div className="relative w-auto xl:w-auto ">
       <div
         className={`sidebar fixed z-50 xl:static transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -92,18 +84,26 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
           modal || modal2 || modal3 ? "blur-sm" : ""
         }`}
       >
-        <div className="self-center xl:flex items-center justify-start mt-10">
-          <div className="w-1/2 mx-auto sm:w-1/4 sm:mx-0 md:w-1/4 md:mx-0">
-            <img
-              src={logo}
-              alt="Logo"
-              className="mx-5 w-3/4 sm:w-4/6 md:w-100 xl:w-100 hidden"
-            />
+        <div className="grid grid-cols-6 self-center xl:flex items-center justify-start mt-10 ">
+          <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0 ">
+            <img src={logo} alt="Logo" className=" " />
           </div>
-          <div className="md:block text-start md:text-left m-5 hidden">
+          <div className="  col-start-2 col-end-6  text-start md:text-left m-5 w-auto">
             <h3 className="text-base font-black m-0">SIMDIS</h3>
             <p className="m-0">Sistem Informasi Manajemen Disposisi</p>
             <p className="m-0">Kantah Jember</p>
+          </div>
+          <div
+            className={`xl:hidden  ${
+              sidebarOpen ? "" : "hidden"
+            } col-start-6 col-end-6`}
+          >
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="text-2xl"
+            >
+              {sidebarOpen ? <FaTimes /> : <FaBars />}
+            </button>
           </div>
         </div>
         <div className="menu mx-8 row-start-3 row-end-8 sm:mx-6">
@@ -236,30 +236,38 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
             </li>
           </ul>
         </div>
-        <div className="account row-span-8 grid">
-          <div className="grid items-center">
+        <div className="account row-span-8">
+          <div className="flex items-center p-2">
             <div
-              className={` ${
-                location.pathname === "/profile"
-                  ? "bg-secondary text-white"
-                  : ""
-              } flex flex-col md:flex-row justify-between items-center mx-8 py-2 md:px-5 rounded-lg gap-2 md:gap-0`}
+              className={`flex ms-3 items-center ${
+                location.pathname === "/profile" ? " text-white" : ""
+              }`}
             >
-              <Link to={"/profile"}>
-                <div className="status hidden md:block">
+              <Link to={"/profile"} className="flex items-center space-x-2">
+                <div className="b p-2 rounded-full">
+                  <CgProfile size="1.5rem" />
+                </div>
+                <div className="status5 md:block">
                   <h4 className="font-bold text-sm">{auth?.name}</h4>
                   <p className="text-xs">{auth?.email}</p>
                 </div>
-                <div className="md:hidden">
-                  <CgProfile size="1.5rem" />
-                </div>
               </Link>
-              <button className="logout mx-2" onClick={HandlerLogout}>
+              <button className="logout ml-4" onClick={HandlerLogout}>
                 <HiOutlineLogout size="1.5rem" />
               </button>
             </div>
           </div>
         </div>
+      </div>
+      <div
+        className={`flex xl:hidden pl-4 pt-4 ${sidebarOpen ? "hidden" : ""} `}
+      >
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="text-2xl"
+        >
+          {sidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
     </div>
   );

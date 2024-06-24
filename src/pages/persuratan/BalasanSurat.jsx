@@ -65,7 +65,7 @@ const BalasanSuratPage = () => {
         .then((res) => {
           setSurat(res.data);
           setLastPage(res.pagination.last_page);
-          setSearchResults([]); 
+          setSearchResults([]);
           setLoading(true);
         })
         .catch((error) => {
@@ -164,7 +164,7 @@ const BalasanSuratPage = () => {
   };
 
   return (
-    <main className="grid grid-cols-5 h-screen gap-8 bg-quinary font-poppins">
+    <main className="grid content-start grid-cols-5 bg-gray-200 font-poppins">
       <ModalEditBalasan
         modal={modalEdit}
         HandlerEditBalasan={HandlerEditBalasan}
@@ -178,7 +178,7 @@ const BalasanSuratPage = () => {
       />
       <Sidebar modal={modalDetail} modal2={modalTambah} modal3={modalEdit} />
       <div
-        className={`content col-start-2 col-end-6 w-97/100 ${
+        className={`content col-start-1 xl:col-start-2 ms-4 w-full flex flex-col col-end-6 pl-2 pr-10 pb-10 ${
           modalDetail || modalEdit || modalTambah ? "blur-sm" : null
         }`}
       >
@@ -198,7 +198,7 @@ const BalasanSuratPage = () => {
               <FaSearch className="absolute right-2 top-3 text-secondary" />
             </div>
           </div>
-          <div className="tabel mt-7 sm:h-100 sm:overflow-y-auto lg:overflow-y-visible">
+          <div className="tabel mt-7 sm:h-100 overflow-auto">
             <table className="table-auto w-full text-center text-sm font-normal font-sans">
               <thead className="text-white font-medium bg-secondary">
                 <tr>
@@ -317,12 +317,9 @@ const BalasanSuratPage = () => {
                     <span className="sr-only">Next</span>
                     <ArrowCircleRight
                       className={`${
-                        (surat &&
-                          surat.replyletter &&
-                          surat.replyletter.length < 10) ||
-                        lastpage === 1
+                        surat?.replyletter?.length < 10 || lastpage <= 1
                           ? "hidden"
-                          : null
+                          : ""
                       } h-7 w-7 text-quaternary`}
                       aria-hidden="true"
                       onClick={() =>

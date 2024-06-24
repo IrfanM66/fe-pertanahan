@@ -325,7 +325,10 @@ const SuratMasukPage = () => {
   };
 
   return (
-    <main className="grid grid-cols-5 h-screen gap-8 bg-quinary font-poppins">
+    <main
+      className="grid content-start
+ grid-cols-5 bg-gray-200 font-poppins h-screen "
+    >
       <ModalTambahSurat
         modal={modal}
         HandlerTambahSurat={HandlerTambahSurat}
@@ -350,7 +353,7 @@ const SuratMasukPage = () => {
       />
       <Sidebar modal={modal} modal2={modal2} modal3={modal3} />
       <div
-        className={`content col-start-2 col-end-6 w-97/100 ${
+        className={`content col-start-1 xl:col-start-2 ms-4 w-full flex flex-col col-end-6 pl-2 pr-10 pb-10 ${
           tambah || modal || modal2 || modal3 ? "blur-sm z-auto" : ""
         }`}
       >
@@ -382,8 +385,8 @@ const SuratMasukPage = () => {
               </div>
             )}
           </div>
-          <div className="tabel mt-7 sm:h-100 sm:overflow-y-auto lg:overflow-y-visible mb-4">
-            <table className="table-auto w-full text-center text-sm font-normal font-poppins">
+          <div className="tabel mt-7 sm:h-100 sm:overflow-y-auto lg:overflow-y-visible mb-4 overflow-auto">
+            <table className="table-auto w-full text-center text-sm font-normal font-poppins ">
               <thead className="text-white bg-secondary">
                 <tr>
                   <th className="py-2">No</th>

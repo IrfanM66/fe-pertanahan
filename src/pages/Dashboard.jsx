@@ -63,9 +63,12 @@ const DashboardPage = () => {
   }, [notifData]);
 
   return (
-    <main className="grid grid-cols-5 h-screen gap-8 bg-gray-200 font-poppins ">
+    <main
+      className="grid content-start
+ grid-cols-5 bg-gray-200 font-poppins h-screen "
+    >
       <Sidebar />
-      <div className="content col-span-4 w-full h-full flex flex-col pr-10 pb-10">
+      <div className="content col-start-1 xl:col-start-2 ms-4 w-full flex flex-col col-end-6 pl-2 pr-10 pb-10">
         <div className="navbar flex justify-between pt-5 items-center">
           <h2 className="font-bold text-2xl">Dashboard</h2>
           <div

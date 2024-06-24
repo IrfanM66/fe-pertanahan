@@ -125,7 +125,7 @@ const ManajemenUserPage = () => {
   };
 
   return (
-    <main className="grid grid-cols-5 h-screen gap-8 bg-quinary font-poppins">
+    <main className="grid content-start grid-cols-5 bg-gray-200 font-poppins">
       <Sidebar modal={tambah} modal2={edit} modal3={detail} />
       <ModalTambah
         modal={tambah}
@@ -144,9 +144,9 @@ const ManajemenUserPage = () => {
         user={detUser}
       />
       <div
-        className={`${
+        className={`content col-start-1 xl:col-start-2 ms-4 w-full flex flex-col col-end-6 pl-2 pr-10 pb-10${
           tambah || edit || detail ? "blur-sm" : null
-        } content col-start-2 col-end-6 w-97/100`}
+        } content col-start-1 col-end-6 w-97/100`}
       >
         <ToastContainer />
         <div className="navbar pt-5">
@@ -177,7 +177,7 @@ const ManajemenUserPage = () => {
               </div>
             )}
           </div>
-          <div className="tabel mt-7 h-100 overflow-y-auto">
+          <div className="tabel mt-7 h-100 overflow-auto ">
             <table className="table-auto w-full text-center text-sm font-normal font-poppins">
               <thead className="text-white font-medium bg-secondary ">
                 <tr>
