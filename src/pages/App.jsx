@@ -87,7 +87,7 @@ function App() {
           alt="Background"
         />
       </div>
-      <div className="relative bg-gradient-to-b from-secondary to-primary rounded-2xl shadow-xl overflow-hidden w-full max-w-md p-6 sm:p-8 z-10 xl:hidden">
+      <div className="relative bg-gradient-to-b from-secondary to-primary shadow-xl overflow-hidden w-full rounded-tr-3xl rounded-bl-3xl max-w-md p-6 sm:p-8 z-10 xl:hidden">
         <div className="flex justify-center mb-6">
           <img src="logo2.png" alt="Logo" className="h-12 sm:h-16 md:h-20" />
         </div>

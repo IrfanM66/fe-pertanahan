@@ -18,7 +18,7 @@ const hideActionSeksi = [
   "Seksi Survei & Pemetaan",
   "Seksi Penataan & Pemberdayaan",
   "Seksi Pengadaan Tanah & Pengembangan",
-  "Seksi Pengendalian & Penanganan Sengketa"
+  "Seksi Pengendalian & Penanganan Sengketa",
 ];
 
 const Sidebar = ({ modal, modal2, modal3 }) => {
@@ -68,7 +68,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined
+      progress: undefined,
     });
     setTimeout(() => {
       navigate("/");
@@ -79,22 +79,22 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
     <div className="relative w-auto xl:w-auto ">
       <div
         className={`sidebar fixed z-50 xl:static transform ${
-          sidebarOpen ? "translate-x-0" : "translate-x-full"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 grid h-screen grid-rows-8 bg-white drop-shadow-custom font-poppins text-sm py-1 ${
           modal || modal2 || modal3 ? "blur-sm" : ""
-        }h-screen`}
+        } right-0`}
       >
         <div className="grid grid-cols-6 self-center xl:flex items-center justify-start mt-10 ">
-          <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0   ">
+          <div className="mx-4 col-start-1/6 col-end-2 xl:w-1/3 xl:ml-10 xl:mx-0">
             <img src={logo} alt="Logo" className=" " />
           </div>
-          <div className="  col-start-2 col-end-6  text-start md:text-left m-5 w-auto">
+          <div className="col-start-2 col-end-6 text-start md:text-left m-5 w-auto">
             <h3 className="text-base font-black m-0">SIMDIS</h3>
             <p className="m-0">Sistem Informasi Manajemen Disposisi</p>
             <p className="m-0">Kantah Jember</p>
           </div>
           <div
-            className={`xl:hidden  ${
+            className={`xl:hidden ${
               sidebarOpen ? "" : "hidden"
             } col-start-6 col-end-6`}
           >
@@ -119,8 +119,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
                 to={"/dashboard"}
                 className="py-3 flex gap-3 items-center font-medium text-sm md:px-3"
               >
-                <GoHome size="1.5rem" className="ml-3" />{" "}
-                {/* Tambahkan kelas ml-3 di sini */}
+                <GoHome size="1.5rem" className="ml-3" />
                 <p
                   className={`${
                     location.pathname === "/dashboard"
@@ -141,8 +140,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
               } hover:cursor-pointer py-3 grid grid-cols-4 gap-3 items-center font-medium text-sm md:px-3 justify-between`}
             >
               <div className="left flex gap-3 col-start-1 col-end-4 justify-self-start">
-                <SlEnvolopeLetter size="1.4rem" className="ml-3" />{" "}
-                {/* Tambahkan kelas ml-3 di sini */}
+                <SlEnvolopeLetter size="1.4rem" className="ml-3" />
                 <p className="text-custom font-semibold md:block">Persuratan</p>
               </div>
               <div className="right justify-self-end col-start-4 col-end-5">
@@ -194,8 +192,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
                 to={"/rekap-surat?page=1"}
                 className="py-3 flex gap-3 items-center font-medium text-sm md:px-3"
               >
-                <CiViewList size="1.5rem" className="ml-3" />{" "}
-                {/* Tambahkan kelas ml-3 di sini */}
+                <CiViewList size="1.5rem" className="ml-3" />
                 <p
                   className={`${
                     location.pathname === "/rekap-surat"
@@ -220,8 +217,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
                   to={"/manajemen-user"}
                   className="hover:cursor-pointer py-3 flex gap-3 items-center font-semibold text-sm md:px-3"
                 >
-                  <CiUser size="1.5rem" className="ml-3" />{" "}
-                  {/* Tambahkan kelas ml-3 di sini */}
+                  <CiUser size="1.5rem" className="ml-3" />
                   <p
                     className={`${
                       location.pathname === "/manajemen-user"
@@ -237,13 +233,13 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
           </ul>
         </div>
         <div className="account row-span-8">
-          <div className="flex items-center p-2 ">
+          <div className="flex items-center p-2">
             <div
               className={`flex ms-3 items-center ml-10 ${
                 location.pathname === "/profile" ? " text-white" : ""
               }`}
             >
-              <Link to={"/profile"} className="flex items-center space-x-2 ">
+              <Link to={"/profile"} className="flex items-center space-x-2">
                 <div className="b p-2 rounded-full">
                   <CgProfile size="1.5rem" />
                 </div>
@@ -260,7 +256,7 @@ const Sidebar = ({ modal, modal2, modal3 }) => {
         </div>
       </div>
       <div
-        className={`flex xl:hidden pl-4 pt-4 ${sidebarOpen ? "hidden" : ""} `}
+        className={`flex xl:hidden pl-4 pt-4 ${sidebarOpen ? "hidden" : ""}`}
       >
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
