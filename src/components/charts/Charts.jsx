@@ -6,6 +6,7 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  ResponsiveContainer
 } from "recharts";
 import { GetDashboard } from "../../utils/FetchChartDashboard";
 import { Oval } from "react-loader-spinner";
@@ -13,38 +14,6 @@ import { Oval } from "react-loader-spinner";
 const Chart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth - 440);
-  const [screenHeight, setScreenHeight] = useState(window.innerHeight - 400);
-  const wrapperStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "50vh",
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1000) {
-        const lebar = 540;
-        setScreenWidth(window.innerWidth - lebar);
-        setScreenHeight(window.innerHeight - 380);
-      } else {
-        if (window.innerWidth < 1000) {
-          setScreenWidth(window.innerWidth - 250);
-          setScreenHeight(window.innerHeight - 440);
-        } else {
-          setScreenWidth(window.innerWidth - 200);
-          setScreenHeight(window.innerHeight - 380);
-        }
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -54,7 +23,7 @@ const Chart = () => {
         const transformedData = label.map((day, index) => ({
           name: day,
           letters: parseInt(jumlah[index], 10),
-          lettersOut: parseInt(jumlahkeluar[index], 10),
+          lettersOut: parseInt(jumlahkeluar[index], 10)
         }));
         setData(transformedData);
       })
@@ -88,44 +57,43 @@ const Chart = () => {
       </div>
 
       {loading ? (
-        <p>
-          <div style={wrapperStyle}>
-            <Oval
-              visible={true}
-              height="50"
-              width="50"
-              color="#3B6F9E"
-              secondaryColor="#9CA3AF"
-              ariaLabel="oval-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-            />
-          </div>
-        </p>
-      ) : (
-        <LineChart
-          width={screenWidth}
-          height={screenHeight}
-          data={data}
-          margin={{ top: 25, right: 45, left: 10, bottom: 5 }}
+        <div
+          className="flex justify-center items-center"
+          style={{ height: "50vh" }}
         >
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <CartesianGrid stroke="#f5f5f5" />
-          <Line
-            type="monotone"
-            dataKey="letters"
-            stroke="#3B6F9E"
-            name="Surat Masuk"
+          <Oval
+            visible={true}
+            height="50"
+            width="50"
+            color="#3B6F9E"
+            secondaryColor="#9CA3AF"
+            ariaLabel="oval-loading"
           />
-          <Line
-            type="monotone"
-            dataKey="lettersOut"
-            stroke="#FFA500"
-            name="Surat Keluar"
-          />
-        </LineChart>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            data={data}
+            margin={{ top: 25, right: 45, left: 10, bottom: 5 }}
+          >
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <CartesianGrid stroke="#f5f5f5" />
+            <Line
+              type="monotone"
+              dataKey="letters"
+              stroke="#3B6F9E"
+              name="Surat Masuk"
+            />
+            <Line
+              type="monotone"
+              dataKey="lettersOut"
+              stroke="#FFA500"
+              name="Surat Keluar"
+            />
+          </LineChart>
+        </ResponsiveContainer>
       )}
     </div>
   );

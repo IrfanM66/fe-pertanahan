@@ -178,16 +178,16 @@ const RekapSuratPage = () => {
               </div>
             </div>
           </div>
-          <div className="tabel mt-7 sm:h-100  overflow-auto ">
+          <div className="tabel mt-7 h-100 text-xs sm:text-sm overflow-auto ">
             <table className="table-auto w-full text-center">
               <thead className="text-white font-semibold bg-secondary">
                 <tr className="">
-                  <th className="py-2 text-sm text-start pl-5">No</th>
-                  <th className="py-2 text-sm text-start">Pengirim</th>
-                  <th className="py-2 text-sm text-start">Jenis</th>
-                  <th className="py-2 text-sm ">Tanggal</th>
-                  <th className="py-2 text-sm ">Deskripsi</th>
-                  <th className="py-2 text-sm ">Draft</th>
+                  <th className="py-2 text-start xl:pl-5">No</th>
+                  <th className="py-2 text-start">Pengirim</th>
+                  <th className="py-2 text-start">Jenis</th>
+                  <th className="py-2 ">Tanggal</th>
+                  <th className="py-2 ">Deskripsi</th>
+                  <th className="py-2 ">Draft</th>
                 </tr>
               </thead>
               <tbody className="text-center">
@@ -211,14 +211,12 @@ const RekapSuratPage = () => {
                           (index + 1) % 2 === 0 ? "bg-quinary" : ""
                         }`}
                       >
-                        <td className="py-2 text-sm">
-                          {index + 1 + (page - 1) * 10}
-                        </td>
-                        <td className="py-2 text-sm text-start">{item.from}</td>
-                        <td className="py-2 text-sm text-start">{item.type}</td>
-                        <td className="py-2 text-sm">{item.date}</td>
-                        <td className="py-2 text-sm">{item.description}</td>
-                        <td className="py-3.5 text-sm grid place-items-center">
+                        <td className="py-2 ">{index + 1 + (page - 1) * 10}</td>
+                        <td className="py-2  text-start">{item.from}</td>
+                        <td className="py-2  text-start">{item.type}</td>
+                        <td className="py-2 ">{item.date}</td>
+                        <td className="py-2 ">{item.description}</td>
+                        <td className="py-3.5  grid place-items-center">
                           <FaFile
                             className="text-primary cursor-pointer"
                             type="button"

@@ -4,7 +4,7 @@ import FormatDate from "../../../utils/Date";
 import { FaFile } from "react-icons/fa";
 import {
   PostSuratMasuk,
-  GetDetailSuratMasuk,
+  GetDetailSuratMasuk
 } from "../../../utils/FetchSuratMasuk";
 
 const ModalTambahSurat = (props) => {
@@ -51,7 +51,7 @@ const ModalTambahSurat = (props) => {
         if (response.status) {
           setSurat((prev) => ({
             letter: [...prev?.letter, response.data.letter],
-            file: [...(prev?.file || []), response.data.file],
+            file: [...(prev?.file || []), response.data.file]
           }));
         }
       }
@@ -70,7 +70,7 @@ const ModalTambahSurat = (props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-2xl overflow-hidden w-full max-w-sm">
+      <div className="bg-white rounded-lg shadow-2xl overflow-hidden w-full max-w-3xl">
         <div className="flex justify-between items-center px-6 py-4">
           <h3 className="font-extrabold text-xl">Tambah Surat</h3>
           <AiOutlineCloseSquare
@@ -80,7 +80,7 @@ const ModalTambahSurat = (props) => {
           />
         </div>
         <form onSubmit={HandlerSubmit}>
-          <div className="p-6 grid grid-cols-1 gap-4">
+          <div className="p-6 grid grid-cols-1 gap-4 xl:grid-cols-2 ">
             <div className="grid gap-1">
               <label
                 htmlFor="reference_number"

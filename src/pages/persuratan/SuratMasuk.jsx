@@ -362,7 +362,7 @@ const SuratMasukPage = () => {
         </div>
         <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6">
           <div className="search flex gap-4 justify-between">
-            <div className="left w-1/3 flex relative">
+            <div className="left xl:w-1/3 flex relative">
               <input
                 type="text"
                 className="outline-none rounded-lg w-full outline-2 outline-quaternary text-quaternary outline-offset-0 text-xs py-3 px-3 font-light italic"
@@ -378,15 +378,15 @@ const SuratMasukPage = () => {
                 className="right bg-secondary rounded-lg text-white grid justify-center content-center px-5 cursor-pointer"
                 onClick={HandlerTambahSurat}
               >
-                <div className="grid grid-flow-col gap-2 text-sm items-center py-2">
+                <div className="grid grid-flow-col gap-1 xl:gap-2 items-center sm:py-2 sm:w-max w-min">
                   <GoPlus size="1rem" />
-                  <button>Tambah Surat</button>
+                  <button className="text-xs xl:text-sm">Tambah Surat</button>
                 </div>
               </div>
             )}
           </div>
-          <div className="tabel mt-7 sm:h-100  mb-4 overflow-auto">
-            <table className="table-auto w-full text-center text-sm font-normal font-poppins ">
+          <div className="tabel mt-7 h-100  mb-4 overflow-auto">
+            <table className="table-auto w-full text-center text-xs sm:text-sm font-normal font-poppins ">
               <thead className="text-white bg-secondary">
                 <tr>
                   <th className="py-2">No</th>
@@ -437,13 +437,11 @@ const SuratMasukPage = () => {
                             : ""
                         }`}
                       >
-                        <td className="py-2 text-sm">
-                          {index + 1 + (page - 1) * 10}
-                        </td>
-                        <td className="py-2 text-sm">{item.from}</td>
-                        <td className="py-2 text-sm">{item.letters_type}</td>
-                        <td className="py-2 text-sm">{item.letter_date}</td>
-                        <td className="py-2 text-sm">
+                        <td className="py-2 ">{index + 1 + (page - 1) * 10}</td>
+                        <td className="py-2 ">{item.from}</td>
+                        <td className="py-2 ">{item.letters_type}</td>
+                        <td className="py-2 ">{item.letter_date}</td>
+                        <td className="py-2 ">
                           <p
                             className={`${
                               isDateExceeded && item.status === "Proses"
@@ -506,7 +504,7 @@ const SuratMasukPage = () => {
                           </div>
                         </td>
                         <td>
-                          <div className="w-auto flex space-x-4">
+                          <div className="w-auto flex space-x-1 sm:space-x-4 mx-2">
                             {!hideActionKakan.includes(auth?.type) && (
                               <div
                                 onClick={() =>
@@ -514,7 +512,7 @@ const SuratMasukPage = () => {
                                 }
                                 className="bg-secondary rounded-xl text-white flex items-center justify-center flex-grow"
                               >
-                                <button className="font-medium py-1 px-2 w-full">
+                                <button className="text-xs sm:text-sm font-light xl:font-medium py-1 px-1 w-full">
                                   Tambah Balasan
                                 </button>
                               </div>
@@ -524,8 +522,8 @@ const SuratMasukPage = () => {
                                 to={`/surat-masuk/disposisi-surat/${item.id}`}
                                 className="flex-grow"
                               >
-                                <div className="bg-secondary rounded-xl text-white flex items-center justify-center w-full flex-grow">
-                                  <button className="font-medium py-1 px-2 w-full">
+                                <div className="bg-secondary rounded-xl text-white flex items-center justify-center flex-grow">
+                                  <button className="text-xs sm:text-sm font-light xl:font-medium py-1 px-1 w-full">
                                     Disposisi Surat
                                   </button>
                                 </div>

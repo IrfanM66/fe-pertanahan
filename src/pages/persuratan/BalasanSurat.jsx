@@ -187,7 +187,7 @@ const BalasanSuratPage = () => {
         </div>
         <div className="rekap mt-5 bg-white rounded-xl drop-shadow-custom p-6">
           <div className="search flex gap-4 justify-between">
-            <div className="left w-1/3 flex relative">
+            <div className="left xl:w-1/3 flex relative">
               <input
                 type="text"
                 className="outline-none rounded-lg w-full outline-2 outline-quaternary  text-quaternary outline-offset-0 text-xs py-3 px-3 font-light italic"
@@ -198,8 +198,8 @@ const BalasanSuratPage = () => {
               <FaSearch className="absolute right-2 top-3 text-secondary" />
             </div>
           </div>
-          <div className="tabel mt-7 sm:h-100 overflow-auto">
-            <table className="table-auto w-full text-center text-sm font-normal font-sans">
+          <div className="tabel mt-7 h-100 overflow-auto">
+            <table className="table-auto w-full text-center text-xs sm:text-sm font-normal font-sans">
               <thead className="text-white font-medium bg-secondary">
                 <tr>
                   <th className="py-2">No</th>
@@ -241,17 +241,13 @@ const BalasanSuratPage = () => {
                         (index + 1) % 2 == 0 ? "bg-quinary" : null
                       } `}
                     >
-                      <td className="py-2.5 text-sm">
-                        {index + 1 + (page - 1) * 10}
-                      </td>
-                      <td className="py-2.5 text-sm">{item.from}</td>
-                      <td className="py-2.5 text-sm">
+                      <td className="py-2.5 ">{index + 1 + (page - 1) * 10}</td>
+                      <td className="py-2.5 ">{item.from}</td>
+                      <td className="py-2.5 ">
                         {item.note ? item.note.substring(0, 35) : ""}
                         {item?.note?.length > 35 ? "....." : ""}
                       </td>
-                      <td className="py-2.5 text-sm">
-                        {item.outgoing_letter_date}
-                      </td>
+                      <td className="py-2.5 ">{item.outgoing_letter_date}</td>
                       <td className="py-2">
                         <div className="aksi flex justify-center gap-2">
                           {hideActionKakan.includes(auth?.type) ? null : (
